@@ -1,0 +1,23 @@
+{
+  "name": "learn-react-testing",
+  "version": "1.0.0",
+  "description": "An introduction to integration testing React components.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/oliverjam/learn-react-testing.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/oliverjam/learn-react-testing/issues"
+  },
+  "homepage": "https://github.com/oliverjam/learn-react-testing#readme",
+  "devDependencies": {
+    "jest": "^22.4.3"
+  }
+}
