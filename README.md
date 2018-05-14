@@ -70,7 +70,7 @@ You can group a set of related tests into a block with `describe`.
 
 Fix the broken test and you should see the test automatically re-run in your terminal (and hopefully pass).
 
-##### Note:
+**Note**:
 
 It's worth noting that `toEqual` performs a recursive check of all properties on an object (sometimes called deep equal). `toBe` on the other hand checks object identity. This means these two objects would pass a `toEqual` check, but not a `toBe`:
 
@@ -92,7 +92,7 @@ const dip2 = {
 
 We'll do a couple of quick unit tests just to make sure your Jest environment is set up correctly and you've got the syntax down.
 
-Have a look at the `utils/jadenCase.js` helper function. It turns regular strings into philosophical [Jaden Smith tweets](https://twitter.com/officialjaden).
+Have a look at the `workshop/utils/jadenCase.js` helper function. It turns regular strings into philosophical [Jaden Smith tweets](https://twitter.com/officialjaden).
 
 Create a file in `utils/` called `jadenCase.test.js`, then write two tests:
 
@@ -101,7 +101,7 @@ Create a file in `utils/` called `jadenCase.test.js`, then write two tests:
 
 ---
 
-### Testing React components
+### Part Two: Testing React components
 
 So how do we test React components? We're going to try and test them as closely to how they'll really be used as possible. That means rendering them in a "DOM" and simulating events to test interaction.
 
@@ -164,11 +164,11 @@ Create a file called `toggle.test.js` and write a test that renders the `Toggle`
 
 ---
 
-### React Testing Library
+### Part Three: React Testing Library 🐐
 
 It gets a bit annoying constantly creating divs and rendering components into them. It would also be nice if we had some general helper functions for finding DOM nodes to assert about in our tests.
 
-This is where [React Testing Library]https://github.com/kentcdodds/react-testing-library) comes in. It's designed to help you write good React integration tests.
+This is where [React Testing Library](https://github.com/kentcdodds/react-testing-library) comes in. It's designed to help you write good React integration tests.
 
 #### The library
 
