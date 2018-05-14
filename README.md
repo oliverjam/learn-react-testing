@@ -109,6 +109,8 @@ So how do we test React components? We're going to try and test them as closely 
 
 Jest comes with [jsdom](https://github.com/jsdom/jsdom) set-up. This is a Node implementation of most of the browser APIs needed to interact with the DOM. This means we can treat our Jest test environment as if it were a browser, which makes rendering a React component easy.
 
+#### Rendering
+
 We use `ReactDOM.render` to render our component into a node in our "DOM" (we'll have to create this node via JS since we don't have an actual HTML DOM):
 
 ```jsx
@@ -120,6 +122,15 @@ test('The button renders', () => {
   ReactDOM.render(<Button />, root);
   console.log(root.querySelector('button')); // HTMLButtonElement { ...
 });
+```
+
+#### Finding our component
+
+Since we have access to the DOM API we can grab our button element using any method we like:
+
+```js
+console.log(root.querySelector('button'));
+console.log(root.children[0]);
 ```
 
 ### Enzyme
