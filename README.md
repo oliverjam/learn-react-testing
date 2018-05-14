@@ -25,6 +25,8 @@ is essentially just some HTML. It's rendered by React magic, but that has alread
 
 It would be better to cover this component as part of an integration test that actually checks some functionality at the same time.
 
+### Testing philosophy
+
 We want the bulk of our tests to be similar to a real user interacting with our application. Users don't call functions in isolation, they find bits of the UI based on labels and interact with them with their mouse or keyboard.
 
 That's not to say unit tests aren't valuable, but you can usually cover the majority of your frontend code with integration tests, then unit test things like helpers/utils and other pure functions.
@@ -46,23 +48,17 @@ button
     └── button.test.js
 ```
 
-We can run our tests by either creating an npm script:
-
-```json
-"scripts": {
-  "test": "jest"
-}
-```
-
-or by using the [convenient npx tool](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b): `npx jest`
+We can run our tests by using the [convenient npx tool](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b): `npx jest`
 
 Jest has a convenient watch mode that will automatically run any tests that change. You can use this by passing `--watch` to Jest (`npx jest --watch`)
 
 #### Test syntax
 
-Clone this repo and run `npm i -D jest`. Once it's installed run `npx jest --watch` to start the test watcher. You should see a few tests passing and one failing. Open up the `intro/intro.test.js` file to see them.
+Clone this repo and run `npm i` to install the dependencies (just Jest and some Babel config so it understands ES6/React).
 
-You create a test the same as in Tape: a function called `test` that takes a description string as the first argument and a function as the second. You can also use `it` if you find that more readable (it's just an alias for `test`).
+Run `npx jest --watch` to start the test watcher. You should see a few tests passing and one failing. Open up the `intro/intro.test.js` file to find them.
+
+You create a test the same as in Tape: a function called `test` that takes a name string as the first argument and a function as the second.
 
 ```js
 test('Jest is working', () => {
@@ -72,7 +68,7 @@ test('Jest is working', () => {
 
 You can group a set of related tests into a block with `describe`.
 
-Fix the broken test and you should see the test automatically re-run in your terminal.
+Fix the broken test and you should see the test automatically re-run in your terminal (and hopefully pass).
 
 ##### Note:
 
@@ -90,16 +86,20 @@ const dip2 = {
 };
 ```
 
+---
+
 #### Your first test
 
 We'll do a couple of quick unit tests just to make sure your Jest environment is set up correctly and you've got the syntax down.
 
-Have a look at the `utils/jadenCase.js` helper function. It turns strings into wonderfully philosophical [Jaden tweets](https://twitter.com/officialjaden).
+Have a look at the `utils/jadenCase.js` helper function. It turns regular strings into philosophical [Jaden Smith tweets](https://twitter.com/officialjaden).
 
 Create a file in `utils/` called `jadenCase.test.js`, then write two tests:
 
-1.  Check that the helper capitalises a single word
-1.  Check that it capitalises every word in a sentence
+1.  Check that the helper capitalises the first letter of a single word
+1.  Check that it capitalises the first letter of every word in a lowercase sentence
+
+---
 
 ### Testing React components
 
@@ -107,7 +107,7 @@ So how do we test React components? We're going to try and test them as closely 
 
 #### jsdom
 
-Jest comes with [jsdom](https://github.com/jsdom/jsdom) set-up. This is a Node implementation of most of the browser APIs needed to interact with the DOM. This means we can treat our Jest test environment as if it were a browser, which makes rendering a React component easy.
+Jest comes with [jsdom](https://github.com/jsdom/jsdom) set-up. This is a Node implementation of most of the browser APIs needed to interact with the DOM. This means we can treat our Jest environment as if it were a browser.
 
 #### Rendering
 
@@ -119,23 +119,91 @@ import Button from './button.js';
 
 test('The button renders', () => {
   const root = document.createElement('div');
-  ReactDOM.render(<Button />, root);
-  console.log(root.querySelector('button')); // HTMLButtonElement { ...
+  ReactDOM.render(<Button>click me</Button>, root);
 });
 ```
 
 #### Finding our component
 
-Since we have access to the DOM API we can grab our button element using any method we like:
+Since we have our root `div` as a variable already we use that to find the bits we want to test. We're using normal DOM methods so there are lots of ways to find elements:
 
 ```js
 console.log(root.querySelector('button'));
+// HTMLButtonElement { ...
 console.log(root.children[0]);
+// HTMLButtonElement { ...
+console.log(root.querySelector('button').textContent);
+// "click me"
 ```
 
-### Enzyme
+#### Testing interactivity
 
-<!-- In my opinion Enzyme has a huge bloated API that isn't well-suited to learning to test. It encourages you to write bad tests because you can pretty much do anything with it, and the docs aren't great so it takes forever to figure out how to do what you want to do.
+We're trying to test components that _do stuff_ here, so we need a way to simulate events. Luckily the ReactDOM package exposes `ReactTestUtils`, which includes the `Simulate` method. This can simulate any event that React understands.
+
+Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it.
+
+```jsx
+import ReactDOM from 'react-dom';
+import ReactTestUtils from 'react-dom/test-utils';
+import Button from './button.js';
+
+test('The button updates when clicked', () => {
+  const root = document.createElement('div');
+  ReactDOM.render(<Button>click me</Button>, root);
+  const buttonNode = root.querySelector('button');
+  ReactTestUtils.Simulate.click(buttonNode);
+  console.log(buttonNode.textContent); // just clicked
+});
+```
+
+---
+
+Open the `workshop/toggle` folder. There's a component in there that will show or hide its children when a button is pressed.
+
+Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then simulates a click on the button and asserts that the children have been rendered.
+
+---
+
+### React Testing Library
+
+It gets a bit annoying constantly creating divs and rendering components into them. It would also be nice if we had some general helper functions for finding DOM nodes to assert about in our tests.
+
+This is where [React Testing Library]https://github.com/kentcdodds/react-testing-library) comes in. It's designed to help you write good React integration tests.
+
+#### The library
+
+You'll mostly need two methods the library exposes: `render` and `Simulate`. `Simulate` is just the same method we've been using from `ReactTestUtils`, re-exported by this library.
+
+The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. What's nice is that the method returns an object with the container div itself and a few helper methods for finding DOM nodes.
+
+These are `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testId` attributes (for nodes that are hard to find by text).
+
+There are a few others (like `getByAltText` for images), but those three are the most useful. If you can't find a node using one of them you can still use regular DOM methods on the `container` that is returned.
+
+Here's our button example from above, re-written:
+
+```js
+import { render, Simulate } from 'react-testing-library';
+import Button from 'button.js';
+
+test('The button updates when clicked', () => {
+  const { container, getByText } = render(<Button>click me</Button>);
+  console.log(container); // HTMLDivElement (our root node)
+  const buttonNode = getByText('click me');
+  Simulate.click(buttonNode);
+  console.log(buttonNode.textContent); // just clicked
+});
+```
+
+---
+
+Refactor your `Toggle` test from before to use React Testing Library. It's also worth reading the docs as they're not too long and cover a few more methods that you might want to use.
+
+---
+
+<!-- ### Enzyme
+
+In my opinion Enzyme has a huge bloated API that isn't well-suited to learning to test. It encourages you to write bad tests because you can pretty much do anything with it, and the docs aren't great so it takes forever to figure out how to do what you want to do.
 Snapshots
 
 Over the last 9 months we've become less and less enamoured with snapshot testing components at Ticketmaster. They end up effectively serving the same purpose as reviewing a diff in a PR.
