@@ -72,6 +72,10 @@
       display: block;
     }
 
+    button::-moz-focus-inner {
+      border: 0;
+    }
+
     .form__input {
       display: block;
       width: 100%;
@@ -110,6 +114,11 @@
     .form__button:hover {
       cursor: pointer;
 
+    }
+
+    .form__button:focus {
+      outline: 2px dashed;
+      outline-offset: -8px;
     }
 
     .form__button--jaden:hover {
