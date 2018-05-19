@@ -6,7 +6,7 @@ class Markdownifier extends React.Component {
 
   markdownifier = event => {
     event.preventDefault();
-    const res = fetch('https://micro-marked-owlpwusnbx.now.sh', {
+    const res = fetch('https://micro-marked-nqbbqbtkrq.now.sh/', {
       method: 'POST',
       body: JSON.stringify({ markdown: this.state.input }),
     })
