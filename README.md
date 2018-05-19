@@ -218,6 +218,12 @@ Create a file in the same directory called `jadenizer.test.js`. Use React Testin
 
 It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
 
+### Part Five: Mocking network requests
+
+You may have noticed another component on the page. This one takes some text input, then submits it to a [little Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
+
+Testing this component is going to be a little trickier because of that network request.
+
 <!-- ### Enzyme
 
 In my opinion Enzyme has a huge bloated API that isn't well-suited to learning to test. It encourages you to write bad tests because you can pretty much do anything with it, and the docs aren't great so it takes forever to figure out how to do what you want to do.
