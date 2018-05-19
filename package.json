@@ -4,7 +4,8 @@
   "description": "An introduction to integration testing React components.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "parcel workshop/index.html",
+    "test": "jest"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,7 @@
     "babel-preset-env": "^1.7.0",
     "babel-preset-react": "^6.24.1",
     "jest": "^22.4.3",
+    "parcel-bundler": "^1.8.1",
     "react-testing-library": "^3.0.2"
   },
   "dependencies": {
