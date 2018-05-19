@@ -205,7 +205,7 @@ Refactor your `Toggle` test from before to use React Testing Library. It's also 
 
 ### Part Four: Testing a real component
 
-Let's get testing a component that actually does something. Run `npm run dev` and take a look at `http://localhost:3000`. We're going to write some tests for the Jadenizer component on the left.
+Let's get testing a component that actually does something. Run `npm run dev` and take a look at `http://localhost:1234`. We're going to write some tests for the Jadenizer component on the left.
 
 Have a look at `workshop/jadenizer/jadenizer`. This component renders a form containing an input. When submitted it converts the input string to Jaden Case and renders it under the form.
 
