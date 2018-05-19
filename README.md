@@ -174,11 +174,13 @@ This is where [React Testing Library](https://github.com/kentcdodds/react-testin
 
 You'll mostly need two methods the library exposes: `render` and `Simulate`. `Simulate` is just the same method we've been using from `ReactTestUtils`, re-exported by this library.
 
-The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. What's nice is that the method returns an object with the container div itself and a few helper methods for finding DOM nodes.
+The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. If you're interested you can look at the [15 line source](https://github.com/kentcdodds/react-testing-library/blob/master/src/index.js). What's nice is that the method returns an object with the container div itself and a few helper methods for finding DOM nodes.
 
-These are `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testId` attributes (for nodes that are hard to find by text).
+Some of these are `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testId` attributes (for nodes that are hard to find by text).
 
 There are a few others (like `getByAltText` for images), but those three are the most useful. If you can't find a node using one of them you can still use regular DOM methods on the `container` that is returned.
+
+A useful convenience method when debugging is `prettyDOM`, which you can use to log nicely formatted HTML nodes (`console.log(prettyDOM(node)))`)
 
 Here's our button example from above, re-written:
 
@@ -197,9 +199,24 @@ test('The button updates when clicked', () => {
 
 ---
 
-Refactor your `Toggle` test from before to use React Testing Library. It's also worth reading the docs as they're not too long and cover a few more methods that you might want to use.
+Refactor your `Toggle` test from before to use React Testing Library. It's also worth reading the [docs](https://github.com/kentcdodds/react-testing-library/) as they're not too long and cover a few more methods that you might want to use.
 
 ---
+
+### Part Four: Testing a real component
+
+Let's get testing a component that actually does something. Run `npm run dev` and take a look at `http://localhost:3000`. We're going to write some tests for the Jadenizer component on the left.
+
+Have a look at `workshop/jadenizer/jadenizer`. This component renders a form containing an input. When submitted it converts the input string to Jaden Case and renders it under the form.
+
+Create a file in the same directory called `jadenizer.test.js`. Use React Testing Library to:
+
+1.  render the Jadenizer component
+1.  input a string
+1.  submit the form
+1.  assert that the string is correctly converted to Jaden Case (and is actually rendered)
+
+It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
 
 <!-- ### Enzyme
 
