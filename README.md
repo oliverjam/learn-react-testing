@@ -205,7 +205,7 @@ Refactor your `Toggle` test from before to use React Testing Library. It's also 
 
 ### Part Four: Testing a real component
 
-Let's get testing a component that actually does something. Run `npm run dev` and take a look at `http://localhost:1234`. We're going to write some tests for the Jadenizer component on the left.
+Let's get testing a component that actually does something. Run `npm run dev` and take a look at http://localhost:1234. We're going to write some tests for the Jadenizer component on the left.
 
 Have a look at `workshop/jadenizer/jadenizer`. This component renders a form containing an input. When submitted it converts the input string to Jaden Case and renders it under the form.
 
@@ -237,18 +237,19 @@ Write some tests that:
 1.  assert that Markdownifier submitted the right request to the API
 1.  assert that Markdownifier rendered the mocked HTML response
 
-<summary><h4>Hint:</h4>
 <details>
+<summary><strong>Hint:</strong></summary>
 <p>You can set up a basic mock with <code>fetchMock.mock("http://apiurl.com/", yourMockResponse)</code></p>
 <p>You can use <code>fetchMock.called("http://apiurl.com/")</code> to check if any requests were made to that domain. You can also use <code>fetchMock.lastCall()</code> to see what the most recent fetch request was.</p>
 </details>
-</summary>
 
 ### Stretch goal
 
 If you're finished, well done! You can get some more practice testing by writing some integration tests for the [Dynamic Data workshop](https://github.com/sofiapoh/react-dynamic-data-workshop).
 
 ## Caveats (for completeness)
+
+We deliberately haven't covered a couple of things that you'll encounter a lot in the React world. Here's our justification for why 🙃
 
 ### Enzyme
 
