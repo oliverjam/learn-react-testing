@@ -214,7 +214,7 @@ Create a file in the same directory called `jadenizer.test.js`. Use React Testin
 1.  render the Jadenizer component
 1.  input a string
 1.  submit the form
-1.  assert that the string is correctly converted to Jaden Case (and is actually rendered)
+1.  assert that the string is correctly converted to Jaden Case and rendered
 
 It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
 
@@ -224,11 +224,46 @@ You may have noticed another component on the page. This one takes some text inp
 
 Testing this component is going to be a little trickier because of that network request.
 
-<!-- ### Enzyme
+We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
-In my opinion Enzyme has a huge bloated API that isn't well-suited to learning to test. It encourages you to write bad tests because you can pretty much do anything with it, and the docs aren't great so it takes forever to figure out how to do what you want to do.
-Snapshots
+We'll use a library called [fetch-mock](http://www.wheresrhys.co.uk/fetch-mock/quickstart) to do this. Have a look at that quickstart guide and then create a test file in the `markdownifier/` directory.
 
-Over the last 9 months we've become less and less enamoured with snapshot testing components at Ticketmaster. They end up effectively serving the same purpose as reviewing a diff in a PR.
+Write some tests that:
 
-Snapshots are useful for testing generated output and making sure it doesn't change when you refactor (e.g. we use them for testing date/currency formatting), but not HTML/CSS output -->
+1.  set up a fetch mock that responds with what you expect
+1.  render the Markdownifier component
+1.  input some markdown
+1.  submit the form
+1.  assert that Markdownifier submitted the right request to the API
+1.  assert that Markdownifier rendered the mocked HTML response
+
+<summary><h4>Hint:</h4>
+<details>
+<p>You can set up a basic mock with <code>fetchMock.mock("http://apiurl.com/", yourMockResponse)</code></p>
+<p>You can use <code>fetchMock.called("http://apiurl.com/")</code> to check if any requests were made to that domain. You can also use <code>fetchMock.lastCall()</code> to see what the most recent fetch request was.</p>
+</details>
+</summary>
+
+### Stretch goal
+
+If you're finished, well done! You can get some more practice testing by writing some integration tests for the [Dynamic Data workshop](https://github.com/sofiapoh/react-dynamic-data-workshop).
+
+## Caveats (for completeness)
+
+### Enzyme
+
+Enzyme is a very popular React testing library from Airbnb. It has some of the same functionality as React Testing Library, but can do _a lot_ more stuff, and has a correspondingly bigger API. It can be a bit overwhelming at first, and makes it easy to write bad tests since you can pretty much do anything with it.
+
+For example you can "shallow render" a component (i.e. not to a real DOM), and then test your component methods directly (e.g. by calling `handleClick` instead of actually simulating a click on a button). This can encourage you to test implementation details of the component, rather than the user-facing "API"—the rendered UI.
+
+That's not to say you can't write good tests with Enzyme, just that when you're learning it's easier to have a more limited API that guides you in the right direction.
+
+### Snapshot testing
+
+Jest has a feature called "snapshots". This is a way to automatically take a copy of your test output (the first time it runs), then assert that this output hasn't change for all subsequent test runs. (Jest keeps these in a `__snapshots__` directory next to the test file). This can sometimes get overused as it's very easy to simply render a component, create a snapshot and end up with a test that fails whenever the rendered output changes.
+
+They're also reliant on your code outputting the correct result the first time the test runs, otherwise you're asserting against an already wrong snapshot.
+
+Over the last 9 months we've become less and less enamoured with snapshot testing components at Ticketmaster. They end up effectively serving the same purpose as reviewing a diff in a PR. You change the render method of a component, see the snapshot fail (duh, you just changed it), then have to update it.
+
+Snapshots are useful for testing generated output and making sure it doesn't change when you refactor. For example we use them for testing date/currency formatting where it would be a hassle to maintain a list of all the correctly formatted strings.
