@@ -1,4 +1,5 @@
 import React from 'react';
+import 'whatwg-fetch'; // node has no fetch so we need to polyfill for the tests
 import jadenCase from '../utils/jadenCase';
 
 class Markdownifier extends React.Component {
@@ -34,7 +35,12 @@ class Markdownifier extends React.Component {
             Markdownify
           </button>
         </form>
-        {output && <div dangerouslySetInnerHTML={{ __html: output }} />}
+        {output && (
+          <div
+            data-testid="output"
+            dangerouslySetInnerHTML={{ __html: output }}
+          />
+        )}
       </section>
     );
   }
