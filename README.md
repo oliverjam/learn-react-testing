@@ -174,6 +174,10 @@ This is where [React Testing Library](https://github.com/kentcdodds/react-testin
 
 You'll mostly need two methods the library exposes: `render` and `Simulate`. `Simulate` is just the same method we've been using from `ReactTestUtils`, re-exported by this library.
 
+**Note:**
+
+Simulate does _not_ simulate actual browser events. This means there are certain caveats, like simulating a click on a submit button will not trigger the form's submit event. Read [this section of the React Testing Library](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event) docs for a workaround.
+
 The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. If you're interested you can look at the [15 line source](https://github.com/kentcdodds/react-testing-library/blob/master/src/index.js). What's nice is that the method returns an object with the container div itself and a few helper methods for finding DOM nodes.
 
 Some of these are `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testId` attributes (for nodes that are hard to find by text).
