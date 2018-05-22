@@ -37,8 +37,6 @@ That's not to say unit tests aren't valuable, but you can usually cover the majo
 
 Jest is a test runner like Tape. It's got quite a lot more built in, and is used very heavily in React land. The syntax for assertions is pretty similar to other testing libraries, so you don't have to learn much.
 
-`npm i -D jest` to add it to your project
-
 Jest will automatically look for any filenames ending in either `.test.js` or `.spec.js` and run them. It'll also run anything in a folder called `__tests__`. This makes it easy to co-locate tests with the relevant component. This is a common component folder set-up:
 
 ```
@@ -48,15 +46,19 @@ button
     └── button.test.js
 ```
 
-We can run our tests by using the [convenient npx tool](https://medium.com/@maybekatz/introducing-npx-an-npm-package-runner-55f7d4bd282b): `npx jest`
+We can create a test script in our `package.json`:
 
-Jest has a convenient watch mode that will automatically run any tests that change. You can use this by passing `--watch` to Jest (`npx jest --watch`)
+```
+"test": "jest --watch"
+```
+
+The `--watch` starts Jest in watch mode. This will automatically run any tests relating to files that have changed.
 
 #### Test syntax
 
 Clone this repo and run `npm i` to install the dependencies (just Jest and some Babel config so it understands ES6/React).
 
-Run `npx jest --watch` to start the test watcher. You should see a few tests passing and one failing. Open up the `intro/intro.test.js` file to find them.
+Run `npm t` to start the test watcher. You should see a few tests passing and one failing. Open up the `intro/intro.test.js` file to find them.
 
 You create a test the same as in Tape: a function called `test` that takes a name string as the first argument and a function as the second.
 
@@ -138,20 +140,20 @@ console.log(root.querySelector('button').textContent);
 
 #### Testing interactivity
 
-We're trying to test components that _do stuff_ here, so we need a way to simulate events. Luckily the ReactDOM package exposes `ReactTestUtils`, which includes the `Simulate` method. This can simulate any event that React understands.
+We're trying to test components that _do stuff_ here, so we need a way to simulate events. Luckily the ReactDOM package exposes `TestUtils`, which includes the `Simulate` method. This can simulate any event that React understands.
 
 Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it.
 
 ```jsx
 import ReactDOM from 'react-dom';
-import ReactTestUtils from 'react-dom/test-utils';
+import TestUtils from 'react-dom/test-utils';
 import Button from './button.js';
 
 test('The button updates when clicked', () => {
   const root = document.createElement('div');
   ReactDOM.render(<Button>click me</Button>, root);
   const buttonNode = root.querySelector('button');
-  ReactTestUtils.Simulate.click(buttonNode);
+  TestUtils.Simulate.click(buttonNode);
   console.log(buttonNode.textContent); // just clicked
 });
 ```
@@ -220,6 +222,11 @@ Create a file in the same directory called `jadenizer.test.js`. Use React Testin
 1.  submit the form
 1.  assert that the string is correctly converted to Jaden Case and rendered
 
+<details>
+<summary><strong>Hint:</strong></summary>
+<p>Remember the <code>Simulate</code> method doesn't create real DOM events. This means a button click won't submit a form. See the link in the note above for possible solutions to this.</p>
+</details>
+
 It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
 
 ### Part Five: Mocking network requests
@@ -230,7 +237,7 @@ Testing this component is going to be a little trickier because of that network 
 
 We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
-We'll use a library called [fetch-mock](http://www.wheresrhys.co.uk/fetch-mock/quickstart) to do this. Have a look at that quickstart guide and then create a test file in the `markdownifier/` directory.
+We'll use a library called [fetch-mock](http://www.wheresrhys.co.uk/fetch-mock/quickstart) to do this. Have a look at that quickstart guide and then create a test file in the `workshop/markdownifier/` directory.
 
 Write some tests that:
 
