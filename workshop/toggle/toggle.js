@@ -12,7 +12,7 @@ class Toggle extends React.Component {
         >
           {this.state.toggled ? 'Hide' : 'Show'}
         </button>
-        <div>{this.props.children}</div>
+        {this.state.toggled && <div>{this.props.children}</div>}
       </React.Fragment>
     );
   }
