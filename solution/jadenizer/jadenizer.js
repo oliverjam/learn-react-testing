@@ -15,7 +15,7 @@ class Jadenizer extends React.Component {
       <section className="section section--jaden" id="jadenizer">
         <form onSubmit={this.jadenize}>
           <h2>Jadenizer</h2>
-          <label htmlFor="converter-input">
+          <label htmlFor="jadenizer-input">
             Enter text for Jadenization
             <input
               id="jadenizer-input"
@@ -28,7 +28,7 @@ class Jadenizer extends React.Component {
             Jadenize
           </button>
         </form>
-        {output && <div>{output}</div>}
+        {output && <div data-testid="output">{output}</div>}
       </section>
     );
   }
