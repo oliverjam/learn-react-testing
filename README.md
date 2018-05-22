@@ -160,7 +160,7 @@ test('The button updates when clicked', () => {
 
 Open the `workshop/toggle` folder. There's a component in there that will show or hide its children when a button is pressed.
 
-Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then simulates a click on the button and asserts that the children have been rendered.
+Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then simulates a click on the button and asserts that the children have been rendered. You may need to find a way to get the `<div>` the children are rendered in :)
 
 ---
 

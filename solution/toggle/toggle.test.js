@@ -5,8 +5,9 @@ import ReactTestUtils from 'react-dom/test-utils';
 
 test('The toggle toggles when clicked', () => {
   const root = document.createElement('div');
-  ReactDOM.render(<Toggle>click me</Toggle>, root);
+  ReactDOM.render(<Toggle>just clicked</Toggle>, root);
   const buttonNode = root.querySelector('button');
+  const childrenNode = root.lastChild;
   ReactTestUtils.Simulate.click(buttonNode);
-  expect(buttonNode.textContent).toEqual('just clicked');
+  expect(childrenNode.textContent).toEqual('just clicked');
 });
