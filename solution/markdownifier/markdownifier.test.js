@@ -13,7 +13,7 @@ import Markdownifier from './markdownifier.js';
 // otherwise our tests might affect each other
 afterEach(cleanup);
 
-test('Markdownifier component', async () => {
+test('Markdownifier component', () => {
   const mockResponse = `<h1 id="a-heading">a heading</h1>`;
   fetchMock.mock('https://micro-marked-nqbbqbtkrq.now.sh/', mockResponse);
 

@@ -7,8 +7,9 @@ import { prettyDOM } from 'react-testing-library';
 test('The toggle toggles when clicked', () => {
   const root = document.createElement('div');
   ReactDOM.render(<Toggle>just clicked</Toggle>, root);
+  document.body.appendChild(root);
   const buttonNode = root.querySelector('button');
-  TestUtils.Simulate.click(buttonNode);
+  buttonNode.click();
   const childrenNode = root.lastChild;
   expect(childrenNode.textContent).toEqual('just clicked');
 });

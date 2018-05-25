@@ -140,7 +140,9 @@ console.log(root.querySelector('button').textContent);
 
 #### Testing interactivity
 
-We're trying to test components that _do stuff_ here, so we need a way to simulate events. Luckily the ReactDOM package exposes `TestUtils`, which includes the `Simulate` method. This can simulate any event that React understands.
+We're trying to test components that _do stuff_ here, so we need a way to trigger events. In order for events to work our elements need to actually be in the document. To achieve this we can use `document.body.appendChild(root)`.
+
+Once our element is in the document we can trigger standard DOM events (e.g. `button.click()`).
 
 Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it.
 
@@ -152,8 +154,9 @@ import Button from './button.js';
 test('The button updates when clicked', () => {
   const root = document.createElement('div');
   ReactDOM.render(<Button>click me</Button>, root);
+  document.body.appendChild(root);
   const buttonNode = root.querySelector('button');
-  TestUtils.Simulate.click(buttonNode);
+  buttonNode.click();
   console.log(buttonNode.textContent); // just clicked
 });
 ```
@@ -162,7 +165,7 @@ test('The button updates when clicked', () => {
 
 Open the `workshop/toggle` folder. There's a component in there that will show or hide its children when a button is pressed.
 
-Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then simulates a click on the button and asserts that the children have been rendered. You may need to find a way to get the `<div>` the children are rendered in :)
+Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then triggers a click on the button and asserts that the children have been rendered. You may need to find a way to get the `<div>` the children are rendered in :)
 
 ---
 
@@ -174,34 +177,38 @@ This is where [React Testing Library](https://github.com/kentcdodds/react-testin
 
 #### The library
 
-You'll mostly need two methods the library exposes: `render` and `Simulate`. `Simulate` is just the same method we've been using from `ReactTestUtils`, re-exported by this library.
+You'll mostly need two methods the library exposes: [`renderIntoDocument`](https://github.com/kentcdodds/react-testing-library#renderintodocument) and [`fireEvent`](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event. The first will put your React component into jsdom's document (like we were above), and the second is a utility for triggering DOM events that don't have easy convenience methods.
 
-**Note:**
+The `renderIntoDocument` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. If you're interested you can look at the [source](https://github.com/kentcdodds/react-testing-library/blob/master/src/index.js). What's nice is that the method returns an object with some convenient tools to help us test. You can destructure just the things you need.
 
-Simulate does _not_ simulate actual browser events. This means there are certain caveats, like simulating a click on a submit button will not trigger the form's submit event. Read [this section of the React Testing Library](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event) docs for a workaround.
+The `container` div itself (useful for `container.querySelector()` to find DOM nodes).
 
-The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. If you're interested you can look at the [15 line source](https://github.com/kentcdodds/react-testing-library/blob/master/src/index.js). What's nice is that the method returns an object with the container div itself and a few helper methods for finding DOM nodes.
+`getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testid` attributes (for nodes that are hard to find by text).
 
-Some of these are `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testId` attributes (for nodes that are hard to find by text).
-
-There are a few others (like `getByAltText` for images), but those three are the most useful. If you can't find a node using one of them you can still use regular DOM methods on the `container` that is returned.
-
-A useful convenience method when debugging is `prettyDOM`, which you can use to log nicely formatted HTML nodes (`console.log(prettyDOM(node)))`)
+You can also use `debug(node)` to pretty print the DOM tree of the node so you know what you're working with.
 
 Here's our button example from above, re-written:
 
 ```js
-import { render, Simulate } from 'react-testing-library';
+import { renderIntoDocument, fireEvent } from 'react-testing-library';
 import Button from 'button.js';
 
 test('The button updates when clicked', () => {
-  const { container, getByText } = render(<Button>click me</Button>);
+  const { container, getByText } = renderIntoDocument(
+    <Button>click me</Button>
+  );
   console.log(container); // HTMLDivElement (our root node)
   const buttonNode = getByText('click me');
-  Simulate.click(buttonNode);
+  fireEvent.click(buttonNode);
   console.log(buttonNode.textContent); // just clicked
 });
 ```
+
+**Note:**
+
+If you read the docs for `renderIntoDocument` you'll see that it's recommended to be used with the `cleanup` function. This will ensure you don't end up with lots of copies of your component in the same document.
+
+You can use Jest's handy method that runs after each test to do this: `afterEach(cleanup)`.
 
 ---
 
@@ -222,18 +229,25 @@ Create a file in the same directory called `jadenizer.test.js`. Use React Testin
 1.  submit the form
 1.  assert that the string is correctly converted to Jaden Case and rendered
 
-<details>
-<summary><strong>Hint:</strong></summary>
-<p>Remember the <code>Simulate</code> method doesn't create real DOM events. This means a button click won't submit a form. See the link in the note above for possible solutions to this.</p>
-</details>
-
 It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
+
+### Interlude: async tests
+
+Jest has good support for testing asynchronous code. You need to ensure your test doesn't finish before your async code has run. The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
+
+```js
+test('Async code', () => {
+  return fetch('http://test').then(res => {
+    expect(res.ok).toBeTruthy();
+  });
+});
+```
 
 ### Part Five: Mocking network requests
 
 You may have noticed another component on the page. This one takes some text input, then submits it to a [little Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
 
-Testing this component is going to be a little trickier because of that network request.
+Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes a handy [`waitForElement`](https://github.com/kentcdodds/react-testing-library#waitforelement) method that you can use when you need to wait for an element.
 
 We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
@@ -253,10 +267,6 @@ Write some tests that:
 <p>You can set up a basic mock with <code>fetchMock.mock("http://apiurl.com/", yourMockResponse)</code></p>
 <p>You can use <code>fetchMock.called("http://apiurl.com/")</code> to check if any requests were made to that domain. You can also use <code>fetchMock.lastCall()</code> to see what the most recent fetch request was.</p>
 </details>
-
-### Stretch goal
-
-If you're finished, well done! You can get some more practice testing by writing some integration tests for the [Dynamic Data workshop](https://github.com/sofiapoh/react-dynamic-data-workshop).
 
 ## Caveats (for completeness)
 
