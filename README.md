@@ -174,7 +174,7 @@ test('The button updates when clicked', () => {
 
 Open the `workshop/toggle` folder. There's a component in there that will show or hide its children when a button is pressed.
 
-Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then triggers a click on the button and asserts that the children have been rendered. You may need to find a way to get the `<div>` the children are rendered in :)
+Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then triggers a click on the button and asserts that the children have been rendered. You may need to find a way to query for the `<div>` the children are rendered in :)
 
 ---
 
@@ -186,26 +186,28 @@ This is where [React Testing Library](https://github.com/kentcdodds/react-testin
 
 #### The library
 
-You'll mostly need two methods the library exposes: [`renderIntoDocument`](https://github.com/kentcdodds/react-testing-library#renderintodocument) and [`fireEvent`](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event. The first will put your React component into jsdom's document (like we were above), and the second is a utility for triggering DOM events that don't have easy convenience methods.
+You'll mostly need two methods the library exposes: [`render`](https://github.com/kentcdodds/react-testing-library#render) and [`fireEvent`](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event). The first will render your React component into jsdom's `document` (like we were above), and the second is a utility for triggering DOM events (since not every event has an equivalent to `node.click()`.
 
-The `renderIntoDocument` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. If you're interested you can look at the [source](https://github.com/kentcdodds/react-testing-library/blob/master/src/index.js). What's nice is that the method returns an object with some convenient tools to help us test. You can destructure just the things you need.
+The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. If you're interested you can look at the [source](https://github.com/kentcdodds/react-testing-library/blob/master/src/index.js). This method returns an object with some convenient tools to help us test. You can destructure just the things you need:
 
-The `container` div itself (useful for `container.querySelector()` to find DOM nodes).
+```js
+const { container, getByText, getByLabelText, getByTestId, debug } = render(
+  <Button>Click me</Button>
+);
+```
 
-`getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testid` attributes (for nodes that are hard to find by text).
-
-You can also use `debug(node)` to pretty print the DOM tree of the node so you know what you're working with.
+- `container` is the div your component was rendered into (useful for `container.querySelector()` to find DOM nodes).
+- `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testid` attributes (for nodes that are hard to find by text).
+- `debug(node)` will pretty print the DOM tree of the node so you can see what you're working with.
 
 Here's our button example from above, re-written:
 
 ```js
-import { renderIntoDocument, fireEvent } from 'react-testing-library';
+import { render, fireEvent } from 'react-testing-library';
 import Button from 'button.js';
 
 test('The button updates when clicked', () => {
-  const { container, getByText } = renderIntoDocument(
-    <Button>click me</Button>
-  );
+  const { container, getByText } = render(<Button>click me</Button>);
   console.log(container); // HTMLDivElement (our root node)
   const buttonNode = getByText('click me');
   fireEvent.click(buttonNode);
@@ -215,7 +217,7 @@ test('The button updates when clicked', () => {
 
 **Note:**
 
-If you read the docs for `renderIntoDocument` you'll see that it's recommended to be used with the `cleanup` function. This will ensure you don't end up with lots of copies of your component in the same document.
+If you read the docs for `render` you'll see that it's recommended to be used with the `cleanup` function. This will ensure you don't end up with lots of copies of your component in the same document.
 
 You can use Jest's handy method that runs after each test to do this: `afterEach(cleanup)`.
 
