@@ -258,7 +258,7 @@ test('Async code', () => {
 
 You may have noticed another component on the page. This one takes some text input, then submits it to a [little Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
 
-Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes a handy [`waitForElement`](https://github.com/kentcdodds/react-testing-library#waitforelement) method that you can use when you need to wait for an element.
+Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes a handy [`waitForElement`](https://github.com/kentcdodds/react-testing-library#waitforelement) method that you can use when you need to wait for an element to appear.
 
 We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
