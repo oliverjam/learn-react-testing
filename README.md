@@ -138,12 +138,10 @@ test('The button renders', () => {
 
 #### Finding our component
 
-Since we have our root `div` as a variable already we use that to find the bits we want to test. We're using normal DOM methods so there are lots of ways to find elements:
+Since we have our root `div` as a variable already we use that to find the bits we want to test. You can use your favourite DOM method to grab nodes:
 
 ```js
 console.log(root.querySelector('button'));
-// HTMLButtonElement { ...
-console.log(root.children[0]);
 // HTMLButtonElement { ...
 console.log(root.querySelector('button').textContent);
 // "click me"
