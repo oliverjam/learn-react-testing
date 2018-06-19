@@ -5,7 +5,7 @@ An introduction to integration testing React components.
 ### Learning outcomes
 
 1.  Jest test runner
-1.  Rendering to a fake DOM in Node
+1.  Rendering to the DOM in Node
 1.  React Testing Library
 1.  Mocking a fetch request
 
@@ -19,9 +19,20 @@ For example you might render a component, check the rendered DOM for a button, s
 
 ### Why not unit test?
 
-Since stateless React components are effectively pure functions it seems like you could unit test them. This is possible, but is not necessarily useful. For example a component like `const Button = ({ children }) => <button>{children}</button>`
+Stateless React components are effectively pure functions, so why not unit test them? This is possible, but not necessarily useful. For example you could test a component like `const Button = ({ children }) => <button>{children}</button>` to assert that if you pass `hello world` as children you get:
 
-is essentially just some HTML. It's rendered by React magic, but that has already been extensively tested by the wonderful React team. It seems a bit of a waste of effort to unit test this component just because it happens to be a function.
+```js
+{
+  type: "button",
+  key: null,
+  ref: null,
+  props: { children: "Hello world" },
+  _owner: null,
+  _store: {},
+}
+```
+
+This test isn't very useful though, because what you're really testing is the React team's implementation of `createElement`, which has already been [extensively tested](https://github.com/facebook/react/blob/master/packages/react/src/__tests__/ReactJSXElement-test.js) by the wonderful React team. It seems a bit of a waste of effort to unit test this component just because it happens to be a function.
 
 It would be better to cover this component as part of an integration test that actually checks some functionality at the same time.
 
@@ -41,9 +52,9 @@ Jest will automatically look for any filenames ending in either `.test.js` or `.
 
 ```
 button
-    ├── button.css
-    ├── button.js
-    └── button.test.js
+├── button.css
+├── button.js
+└── button.test.js
 ```
 
 We can create a test script in our `package.json`:
