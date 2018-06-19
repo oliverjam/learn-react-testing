@@ -105,7 +105,7 @@ const dip2 = {
 
 We'll do a couple of quick unit tests just to make sure your Jest environment is set up correctly and you've got the syntax down.
 
-Have a look at the `workshop/utils/jadenCase.js` helper function. It turns regular strings into philosophical [Jaden Smith tweets](https://twitter.com/officialjaden).
+Have a look at the `workshop/utils/jadenCase.js` helper function. It turns regular strings into philosophical [Jaden Smith tweets](https://twitter.com/officialjaden) (That Are Formatted With This Strange Capitalisation).
 
 Create a file in `utils/` called `jadenCase.test.js`, then write two tests:
 
