@@ -1,6 +1,6 @@
 import React from 'react';
 import {
-  renderIntoDocument,
+  render,
   fireEvent,
   cleanup,
   waitForElement,
@@ -17,7 +17,7 @@ test('Markdownifier component', () => {
   const mockResponse = `<h1 id="a-heading">a heading</h1>`;
   fetchMock.mock('https://micro-marked-nqbbqbtkrq.now.sh/', mockResponse);
 
-  const { debug, getByText, getByLabelText, getByTestId } = renderIntoDocument(
+  const { debug, getByText, getByLabelText, getByTestId } = render(
     <Markdownifier />
   ); // use renderIntoDocument so we have a real document with browser events
 

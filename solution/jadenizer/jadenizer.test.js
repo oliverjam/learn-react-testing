@@ -1,5 +1,5 @@
 import React from 'react';
-import { renderIntoDocument, cleanup, fireEvent } from 'react-testing-library';
+import { render, cleanup, fireEvent } from 'react-testing-library';
 import Jadenizer from './jadenizer.js';
 
 // ensures our document gets cleared out after each test
@@ -8,7 +8,7 @@ import Jadenizer from './jadenizer.js';
 afterEach(cleanup);
 
 test('Jadenizer component', () => {
-  const { getByText, getByLabelText, getByTestId } = renderIntoDocument(
+  const { getByText, getByLabelText, getByTestId } = render(
     <Jadenizer />
   ); // use renderIntoDocument so we have a real document with browser events
 
