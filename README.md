@@ -262,7 +262,25 @@ Testing this component is going to be a little trickier because of that network 
 
 We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
-We'll use a library called [fetch-mock](http://www.wheresrhys.co.uk/fetch-mock/quickstart) to do this. Have a look at that quickstart guide and then create a test file in the `workshop/markdownifier/` directory.
+Create a test file in the `workshop/markdownifier/` directory, and then we can mock the global `fetch` method.
+
+Jest has a built-in way to create mocked functions using `jest.fn()`. You can read more about that in [the Jest docs](https://jestjs.io/docs/en/mock-functions).
+
+We want to replace the globally available fetch implementation with our own one that returns some mock data for our test. We need to make sure it matches the implementation in our component—e.g. we expect it to return a promise that resolves with a response object with a `text` method that also returns a promise that eventually resolves with our mock HTML.
+
+If you want to have a go at trying to implement this yourself feel free; if not expand the hint below to find one ready made :)
+
+<summary>
+<details>Hint</details>
+```js
+const mockResponse = `insert your mock html here`;
+global.fetch = jest
+  .fn()
+  .mockImplementation(() =>
+    Promise.resolve({ text: () => Promise.resolve(mockResponse) })
+  );
+```
+</summary>
 
 Write some tests that:
 
