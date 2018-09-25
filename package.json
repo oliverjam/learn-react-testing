@@ -27,7 +27,7 @@
     "babel-preset-react": "^6.24.1",
     "jest": "^22.4.3",
     "parcel-bundler": "^1.8.1",
-    "react-testing-library": "^4.1.3",
+    "react-testing-library": "^5.1.0",
     "whatwg-fetch": "^2.0.4"
   },
   "dependencies": {

@@ -8,15 +8,14 @@ import Jadenizer from './jadenizer.js';
 afterEach(cleanup);
 
 test('Jadenizer component', () => {
-  const { getByText, getByLabelText, getByTestId } = render(
-    <Jadenizer />
-  ); // use renderIntoDocument so we have a real document with browser events
+  const { getByText, getByLabelText, getByTestId } = render(<Jadenizer />); // use renderIntoDocument so we have a real document with browser events
 
   const button = getByText('Jadenize');
   const input = getByLabelText('Enter text for Jadenization');
 
-  input.value = `how can mirrors be real if our eyes aren't real`;
-  fireEvent.change(input); // ensure our onChange gets called
+  fireEvent.change(input, {
+    target: { value: `how can mirrors be real if our eyes aren't real` },
+  }); // fire the onChange event
   fireEvent.click(button); // fire a real browser event on the submit button
 
   const output = getByTestId('output');
