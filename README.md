@@ -268,10 +268,8 @@ Jest has a built-in way to create mocked functions using `jest.fn()`. You can re
 
 We want to replace the globally available fetch implementation with our own one that returns some mock data for our test. We need to make sure it matches the implementation in our component—e.g. we expect it to return a promise that resolves with a response object with a `text` method that also returns a promise that eventually resolves with our mock HTML.
 
-If you want to have a go at trying to implement this yourself feel free; if not expand the hint below to find one ready made :)
+If you want to have a go at trying to implement this yourself feel free; if not there's a ready-made one below :)
 
-<summary>
-<details>Hint</details>
 ```js
 const mockResponse = `insert your mock html here`;
 global.fetch = jest
@@ -280,7 +278,6 @@ global.fetch = jest
     Promise.resolve({ text: () => Promise.resolve(mockResponse) })
   );
 ```
-</summary>
 
 Write some tests that:
 
@@ -290,12 +287,6 @@ Write some tests that:
 1.  submit the form
 1.  assert that Markdownifier submitted the right request to the API
 1.  assert that Markdownifier rendered the mocked HTML response
-
-<details>
-<summary><strong>Hint:</strong></summary>
-<p>You can set up a basic mock with <code>fetchMock.mock("http://apiurl.com/", yourMockResponse)</code></p>
-<p>You can use <code>fetchMock.called("http://apiurl.com/")</code> to check if any requests were made to that domain. You can also use <code>fetchMock.lastCall()</code> to see what the most recent fetch request was.</p>
-</details>
 
 ## Caveats (for completeness)
 
