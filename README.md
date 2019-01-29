@@ -74,7 +74,7 @@ Run `npm t` to start the test watcher. You should see a few tests passing and on
 You create a test the same as in Tape: a function called `test` that takes a name string as the first argument and a function as the second.
 
 ```js
-test('Jest is working', () => {
+test("Jest is working", () => {
   expect(true).toBeTruthy();
 });
 ```
@@ -89,13 +89,13 @@ It's worth noting that `toEqual` performs a recursive check of all properties on
 
 ```js
 const dip1 = {
-  name: 'hummus',
-  flavour: '*****',
+  name: "hummus",
+  flavour: "*****"
 };
 
 const dip2 = {
-  name: 'hummus',
-  flavour: '*****',
+  name: "hummus",
+  flavour: "*****"
 };
 ```
 
@@ -127,11 +127,11 @@ Jest comes with [jsdom](https://github.com/jsdom/jsdom) set-up. This is a Node i
 We use `ReactDOM.render` to render our component into a node in our "DOM" (we'll have to create this node via JS since we don't have an actual HTML DOM):
 
 ```jsx
-import ReactDOM from 'react-dom';
-import Button from './button.js';
+import ReactDOM from "react-dom";
+import Button from "./button.js";
 
-test('The button renders', () => {
-  const root = document.createElement('div');
+test("The button renders", () => {
+  const root = document.createElement("div");
   ReactDOM.render(<Button>click me</Button>, root);
 });
 ```
@@ -141,9 +141,9 @@ test('The button renders', () => {
 Since we have our root `div` as a variable already we use that to find the bits we want to test. You can use your favourite DOM method to grab nodes:
 
 ```js
-console.log(root.querySelector('button'));
+console.log(root.querySelector("button"));
 // HTMLButtonElement { ...
-console.log(root.querySelector('button').textContent);
+console.log(root.querySelector("button").textContent);
 // "click me"
 ```
 
@@ -156,15 +156,15 @@ Once our element is in the document we can trigger standard DOM events (e.g. `bu
 Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it.
 
 ```jsx
-import ReactDOM from 'react-dom';
-import TestUtils from 'react-dom/test-utils';
-import Button from './button.js';
+import ReactDOM from "react-dom";
+import TestUtils from "react-dom/test-utils";
+import Button from "./button.js";
 
-test('The button updates when clicked', () => {
-  const root = document.createElement('div');
+test("The button updates when clicked", () => {
+  const root = document.createElement("div");
   ReactDOM.render(<Button>click me</Button>, root);
   document.body.appendChild(root);
-  const buttonNode = root.querySelector('button');
+  const buttonNode = root.querySelector("button");
   buttonNode.click();
   console.log(buttonNode.textContent); // just clicked
 });
@@ -203,13 +203,13 @@ const { container, getByText, getByLabelText, getByTestId, debug } = render(
 Here's our button example from above, re-written:
 
 ```js
-import { render, fireEvent } from 'react-testing-library';
-import Button from 'button.js';
+import { render, fireEvent } from "react-testing-library";
+import Button from "button.js";
 
-test('The button updates when clicked', () => {
+test("The button updates when clicked", () => {
   const { container, getByText } = render(<Button>click me</Button>);
   console.log(container); // HTMLDivElement (our root node)
-  const buttonNode = getByText('click me');
+  const buttonNode = getByText("click me");
   fireEvent.click(buttonNode);
   console.log(buttonNode.textContent); // just clicked
 });
@@ -223,7 +223,7 @@ You can use Jest's handy method that runs after each test to do this: `afterEach
 
 ---
 
-Refactor your `Toggle` test from before to use React Testing Library. It's also worth reading the [docs](https://github.com/kentcdodds/react-testing-library/) as they're not too long and cover a few more methods that you might want to use.
+Refactor your `Toggle` test from before to use React Testing Library. It's also worth reading the [Queries section of the docs](https://testing-library.com/docs/api-queries) as they're not too long and cover a few more methods that you might want to use.
 
 ---
 
@@ -247,8 +247,8 @@ It's worth writing a few tests to cover different potential scenarios the app mi
 Jest has good support for testing asynchronous code. You need to ensure your test doesn't finish before your async code has run. The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
 
 ```js
-test('Async code', () => {
-  return fetch('http://test').then(res => {
+test("Async code", () => {
+  return fetch("http://test").then(res => {
     expect(res.ok).toBeTruthy();
   });
 });
