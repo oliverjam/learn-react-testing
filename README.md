@@ -182,13 +182,13 @@ Create a file called `toggle.test.js` and write a test that renders the `Toggle`
 
 It gets a bit annoying constantly creating divs and rendering components into them. It would also be nice if we had some general helper functions for finding DOM nodes to assert about in our tests.
 
-This is where [React Testing Library](https://github.com/kentcdodds/react-testing-library) comes in. It's designed to help you write good React integration tests.
+This is where [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) comes in. It's designed to help you write good React integration tests.
 
 #### The library
 
-You'll mostly need two methods the library exposes: [`render`](https://github.com/kentcdodds/react-testing-library#render) and [`fireEvent`](https://github.com/kentcdodds/react-testing-library#fireeventnode-htmlelement-event-event). The first will render your React component into jsdom's `document` (like we were above), and the second is a utility for triggering DOM events (since not every event has an equivalent to `node.click()`.
+You'll mostly need two methods the library exposes: [`render`](https://testing-library.com/docs/react-testing-library/api#render) and [`fireEvent`](https://testing-library.com/docs/api-events#fireevent). The first will render your React component into jsdom's `document` (like we were above), and the second is a utility for triggering DOM events (since not every event has an equivalent to `node.click()`.
 
-The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. If you're interested you can look at the [source](https://github.com/kentcdodds/react-testing-library/blob/master/src/index.js). This method returns an object with some convenient tools to help us test. You can destructure just the things you need:
+The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. This method returns an object with some convenient tools to help us test. You can destructure just the things you need:
 
 ```js
 const { container, getByText, getByLabelText, getByTestId, debug } = render(
@@ -207,11 +207,10 @@ import { render, fireEvent } from "react-testing-library";
 import Button from "button.js";
 
 test("The button updates when clicked", () => {
-  const { container, getByText } = render(<Button>click me</Button>);
-  console.log(container); // HTMLDivElement (our root node)
-  const buttonNode = getByText("click me");
+  const { getByText } = render(<Button>click me</Button>);
+  const buttonNode = getByText("click me"); // our rendered button node
   fireEvent.click(buttonNode);
-  console.log(buttonNode.textContent); // just clicked
+  getByText("just clicked"); // the same button node with updated text
 });
 ```
 
