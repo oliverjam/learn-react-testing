@@ -29,7 +29,6 @@ class Markdownifier extends React.Component {
               value={input}
               onChange={e => this.setState({ input: e.target.value })}
               rows="6"
-              placeholder="# hello world \n \n _italic text_"
             />
           </label>
           <button type="submit" className="form__button form__button--markdown">

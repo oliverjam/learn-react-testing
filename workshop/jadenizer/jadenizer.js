@@ -25,7 +25,6 @@ class Jadenizer extends React.Component {
               className="form__input"
               value={input}
               onChange={e => this.setState({ input: e.target.value })}
-              placeholder="how can mirrors be real if our eyes aren't real"
             />
           </label>
           <button type="submit" className="form__button form__button--jaden">
