@@ -1,8 +1,11 @@
-import React from 'react';
-import jadenCase from '../utils/jadenCase';
+import React from "react";
+import jadenCase from "../utils/jadenCase";
 
 class Jadenizer extends React.Component {
-  state = { input: '', output: '' };
+  state = {
+    input: "",
+    output: ""
+  };
 
   jadenize = event => {
     event.preventDefault();
@@ -22,6 +25,7 @@ class Jadenizer extends React.Component {
               className="form__input"
               value={input}
               onChange={e => this.setState({ input: e.target.value })}
+              placeholder="how can mirrors be real if our eyes aren't real"
             />
           </label>
           <button type="submit" className="form__button form__button--jaden">

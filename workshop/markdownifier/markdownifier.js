@@ -1,15 +1,15 @@
-import React from 'react';
-import 'whatwg-fetch'; // node has no fetch so we need to polyfill for the tests
-import jadenCase from '../utils/jadenCase';
+import React from "react";
+import "whatwg-fetch"; // node has no fetch so we need to polyfill for the tests
+import jadenCase from "../utils/jadenCase";
 
 class Markdownifier extends React.Component {
-  state = { input: '', output: '' };
+  state = { input: "", output: "" };
 
   markdownifier = event => {
     event.preventDefault();
-    const res = fetch('https://micro-marked-nqbbqbtkrq.now.sh/', {
-      method: 'POST',
-      body: JSON.stringify({ markdown: this.state.input }),
+    const res = fetch("https://micro-marked-nqbbqbtkrq.now.sh/", {
+      method: "POST",
+      body: JSON.stringify({ markdown: this.state.input })
     })
       .then(res => res.text())
       .then(html => this.setState({ output: html }));
@@ -29,6 +29,7 @@ class Markdownifier extends React.Component {
               value={input}
               onChange={e => this.setState({ input: e.target.value })}
               rows="6"
+              placeholder="# hello world \n \n _italic text_"
             />
           </label>
           <button type="submit" className="form__button form__button--markdown">
