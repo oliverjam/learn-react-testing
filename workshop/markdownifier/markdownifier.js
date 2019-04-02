@@ -36,7 +36,7 @@ class Markdownifier extends React.Component {
           </button>
         </form>
         {output && (
-          <div
+          <output
             data-testid="output"
             dangerouslySetInnerHTML={{ __html: output }}
           />

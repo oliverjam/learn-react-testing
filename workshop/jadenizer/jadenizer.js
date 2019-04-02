@@ -28,7 +28,7 @@ class Jadenizer extends React.Component {
             Jadenize
           </button>
         </form>
-        {output && <div data-testid="output">{output}</div>}
+        {output && <output data-testid="output">{output}</output>}
       </section>
     );
   }
