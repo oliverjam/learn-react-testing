@@ -243,7 +243,7 @@ It's worth writing a few tests to cover different potential scenarios the app mi
 
 ### Interlude: async tests
 
-Jest has good support for testing asynchronous code. You need to ensure your test doesn't finish before your async code has run. The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
+You need to ensure your test doesn't finish before your async code has run. The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
 
 ```js
 test("Async code", () => {
@@ -255,9 +255,9 @@ test("Async code", () => {
 
 ### Part Five: Mocking network requests
 
-You may have noticed another component on the page. This one takes some text input, then submits it to a [little Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
+You may have noticed another component on the page. This one takes some text input, then submits it to a [Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
 
-Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes a handy [`waitForElement`](https://github.com/kentcdodds/react-testing-library#waitforelement) method that you can use when you need to wait for an element to appear.
+Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes [`findByText`](https://testing-library.com/docs/api-queries#findby) etc methods that you can use when you need to wait for an element to appear.
 
 We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
@@ -269,14 +269,19 @@ We want to replace the globally available fetch implementation with our own one 
 
 If you want to have a go at trying to implement this yourself feel free; if not there's a ready-made one below :)
 
-```js
+<details>
+<summary>Spoiler</summary>
+<div class="highlight highlight-source-js-jsx">
+<pre>
 const mockResponse = `insert your mock html here`;
 global.fetch = jest
   .fn()
   .mockImplementation(() =>
     Promise.resolve({ text: () => Promise.resolve(mockResponse) })
   );
-```
+</pre>
+</div>
+</details>
 
 Write some tests that:
 
