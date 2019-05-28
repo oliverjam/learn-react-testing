@@ -15,32 +15,17 @@ An introduction to integration testing React components.
 
 Where a unit test checks that a single "unit" of your code (usually a function) works as expected in isolation, an integration test ensures a more complete "feature" is working. This usually means testing a few tightly couples pieces of your code in one go.
 
-For example you might render a component, check the rendered DOM for a button, simulate a click on that button, then finally check that the DOM has updated as you expected.
+For example you might render a component, check the rendered DOM for a button, click on that button, then finally check that the DOM has updated as you expected.
 
 ### Why not unit test?
 
-Stateless React components are effectively pure functions, so why not unit test them? This is possible, but not necessarily useful. For example you could test a component like `const Button = ({ children }) => <button>{children}</button>` to assert that if you pass `hello world` as children you get:
+Unit tests are useful for pure functions, but it's hard to unit test a UI. Integration tests also tend to give you more coverage in a single test—a good test for a component will end up ensuring quite a lot of code works as expected.
 
-```js
-{
-  type: "button",
-  key: null,
-  ref: null,
-  props: { children: "Hello world" },
-  _owner: null,
-  _store: {},
-}
-```
-
-This test isn't very useful though, because what you're really testing is the React team's implementation of `createElement`, which has already been [extensively tested](https://github.com/facebook/react/blob/master/packages/react/src/__tests__/ReactJSXElement-test.js) by the wonderful React team. It seems a bit of a waste of effort to unit test this component just because it happens to be a function.
-
-It would be better to cover this component as part of an integration test that actually checks some functionality at the same time.
+That's not to say unit tests aren't valuable, but you can usually cover the majority of your frontend code with integration tests, then unit test things like helpers/utils and other pure functions.
 
 ### Testing philosophy
 
 We want the bulk of our tests to be similar to a real user interacting with our application. Users don't call functions in isolation, they find bits of the UI based on labels and interact with them with their mouse or keyboard.
-
-That's not to say unit tests aren't valuable, but you can usually cover the majority of your frontend code with integration tests, then unit test things like helpers/utils and other pure functions.
 
 ## Workshop
 
@@ -116,57 +101,70 @@ Create a file in `utils/` called `jadenCase.test.js`, then write two tests:
 
 ### Part Two: Testing React components
 
-So how do we test React components? We're going to try and test them as closely to how they'll really be used as possible. That means rendering them in a "DOM" and simulating events to test interaction.
+So how do we test React components? We're going to try and test them as closely to how they'll really be used as possible. That means rendering them in a "DOM" and firing events to test user interaction.
 
 #### jsdom
 
 Jest comes with [jsdom](https://github.com/jsdom/jsdom) set-up. This is a Node implementation of most of the browser APIs needed to interact with the DOM. This means we can treat our Jest environment as if it were a browser.
 
+#### React Testing Library
+
+We'll be using [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) (RTL) to render our React components to jsdom, fire events and find things on the "page".
+
 #### Rendering
 
-We use `ReactDOM.render` to render our component into a node in our "DOM" (we'll have to create this node via JS since we don't have an actual HTML DOM):
+We can render our components to jsdom using RTL's [`render`](https://testing-library.com/docs/react-testing-library/api#render) method.
 
 ```jsx
-import ReactDOM from "react-dom";
-import Button from "./button.js";
+import React from "react-dom";
+import { render } from "react-testing-library";
+import Button from "./Button";
 
 test("The button renders", () => {
-  const root = document.createElement("div");
-  ReactDOM.render(<Button>click me</Button>, root);
+  render(<Button>click me</Button>);
 });
 ```
 
-#### Finding our component
+#### Finding our elements
 
-Since we have our root `div` as a variable already we use that to find the bits we want to test. You can use your favourite DOM method to grab nodes:
+The return value of `render` is an object with [useful methods](https://testing-library.com/docs/dom-testing-library/api-queries#queries) for finding elements on the page. You can destructure them out like this:
 
-```js
-console.log(root.querySelector("button"));
-// HTMLButtonElement { ...
-console.log(root.querySelector("button").textContent);
-// "click me"
+```jsx
+import React from "react-dom";
+import { render } from "react-testing-library";
+import Button from "./Button";
+
+test("The button renders", () => {
+  const { getByText } = render(<Button>click me</Button>);
+  const buttonNode = getByText("click me"); // <button>click me</button>;
+});
 ```
+
+We're using `getByText` to search for an element with a certain text content (the same way a user would).
+
+The object that `render` returns includes lots of useful things, including:
+
+- `container` is the div your component was rendered into.
+- `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testid` attributes (for nodes that are hard to find by text).
+- `debug()` will pretty print the DOM tree so you can see what you're working with.
 
 #### Testing interactivity
 
-We're trying to test components that _do stuff_ here, so we need a way to trigger events. In order for events to work our elements need to actually be in the document. To achieve this we can use `document.body.appendChild(root)`.
-
-Once our element is in the document we can trigger standard DOM events (e.g. `button.click()`).
+We're trying to test components that _do stuff_ here, so we need a way to trigger events. We'll use RTL's [`fireEvent`](https://testing-library.com/docs/api-events#fireevent) export for this.
 
 Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it.
 
 ```jsx
-import ReactDOM from "react-dom";
-import TestUtils from "react-dom/test-utils";
-import Button from "./button.js";
+import React from "react-dom";
+import { render } from "react-testing-library";
+import Button from "./Button";
 
-test("The button updates when clicked", () => {
-  const root = document.createElement("div");
-  ReactDOM.render(<Button>click me</Button>, root);
-  document.body.appendChild(root);
-  const buttonNode = root.querySelector("button");
-  buttonNode.click();
-  console.log(buttonNode.textContent); // just clicked
+test("The button renders", () => {
+  const { getByText } = render(<Button>click me</Button>);
+  const buttonNode = getByText("click me"); // <button>click me</button>;
+  fireEvent.click(buttonNode);
+  getByText("just clicked"); // the same button node with updated text
+  // getByText will fail the test if it can't find an element with matching text
 });
 ```
 
@@ -174,45 +172,18 @@ test("The button updates when clicked", () => {
 
 Open the `workshop/toggle` folder. There's a component in there that will show or hide its children when a button is pressed.
 
-Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then triggers a click on the button and asserts that the children have been rendered. You may need to find a way to query for the `<div>` the children are rendered in :)
+Create a file called `toggle.test.js` and write a test that renders the `Toggle`, then triggers a click on the button and asserts that the children you passed in have been rendered.
+
+<details>
+<summary>Click for a hint</summary>
+
+```jsx
+const { getByText } = render(<Toggle>text I can search for</Toggle>);
+```
+
+</details>
 
 ---
-
-### Part Three: React Testing Library 🐐
-
-It gets a bit annoying constantly creating divs and rendering components into them. It would also be nice if we had some general helper functions for finding DOM nodes to assert about in our tests.
-
-This is where [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) comes in. It's designed to help you write good React integration tests.
-
-#### The library
-
-You'll mostly need two methods the library exposes: [`render`](https://testing-library.com/docs/react-testing-library/api#render) and [`fireEvent`](https://testing-library.com/docs/api-events#fireevent). The first will render your React component into jsdom's `document` (like we were above), and the second is a utility for triggering DOM events (since not every event has an equivalent to `node.click()`.
-
-The `render` method does exactly what we've already been doing: creates a div and uses ReactDOM to render your component into it. This method returns an object with some convenient tools to help us test. You can destructure just the things you need:
-
-```js
-const { container, getByText, getByLabelText, getByTestId, debug } = render(
-  <Button>Click me</Button>
-);
-```
-
-- `container` is the div your component was rendered into (useful for `container.querySelector()` to find DOM nodes).
-- `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testid` attributes (for nodes that are hard to find by text).
-- `debug(node)` will pretty print the DOM tree of the node so you can see what you're working with.
-
-Here's our button example from above, re-written:
-
-```js
-import { render, fireEvent } from "react-testing-library";
-import Button from "button.js";
-
-test("The button updates when clicked", () => {
-  const { getByText } = render(<Button>click me</Button>);
-  const buttonNode = getByText("click me"); // our rendered button node
-  fireEvent.click(buttonNode);
-  getByText("just clicked"); // the same button node with updated text
-});
-```
 
 **Note:**
 
@@ -228,7 +199,7 @@ Refactor your `Toggle` test from before to use React Testing Library. It's also 
 
 ### Part Four: Testing a real component
 
-Let's get testing a component that actually does something. Run `npm run dev` and take a look at http://localhost:1234. We're going to write some tests for the Jadenizer component on the left.
+Let's get testing a more complex component. Run `npm run dev` and take a look at http://localhost:1234. We're going to write some tests for the Jadenizer component on the left.
 
 Have a look at `workshop/jadenizer/jadenizer`. This component renders a form containing an input. When submitted it converts the input string to Jaden Case and renders it under the form.
 
