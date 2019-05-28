@@ -232,7 +232,7 @@ test("Async code", () => {
 
 You may have noticed another component on the page. This one takes some text input, then submits it to a [Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
 
-Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes [`findByText`](https://testing-library.com/docs/api-queries#findby). You can use this when you need to wait for an element to appear. There are `findBy*` variants for all the `getBy*` methods.
+Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish before rendering. React Testing Library exposes [`findByText`](https://testing-library.com/docs/api-queries#findby). You can use this when you need to wait for an element to appear. There are `findBy*` variants for all the `getBy*` methods.
 
 #### Mocks
 
