@@ -5,7 +5,6 @@ An introduction to integration testing React components.
 ### Learning outcomes
 
 1.  Jest test runner
-1.  Rendering to the DOM in Node
 1.  React Testing Library
 1.  Mocking a fetch request
 
