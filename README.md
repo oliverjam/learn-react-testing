@@ -193,10 +193,6 @@ You can use Jest's handy method that runs after each test to do this: `afterEach
 
 ---
 
-Refactor your `Toggle` test from before to use React Testing Library. It's also worth reading the [Queries section of the docs](https://testing-library.com/docs/api-queries) as they're not too long and cover a few more methods that you might want to use.
-
----
-
 ### Part Four: Testing a real component
 
 Let's get testing a more complex component. Run `npm run dev` and take a look at http://localhost:1234. We're going to write some tests for the Jadenizer component on the left.
@@ -212,7 +208,13 @@ Create a file in the same directory called `jadenizer.test.js`. Use React Testin
 
 It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
 
-### Interlude: async tests
+#### Hint
+
+Take a look at the first entry in [RTL's FAQ](https://testing-library.com/docs/react-testing-library/faq). It should show how to test input change events.
+
+---
+
+### Async tests
 
 You need to ensure your test doesn't finish before your async code has run. The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
 
@@ -224,11 +226,15 @@ test("Async code", () => {
 });
 ```
 
+---
+
 ### Part Five: Mocking network requests
 
 You may have noticed another component on the page. This one takes some text input, then submits it to a [Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
 
-Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes [`findByText`](https://testing-library.com/docs/api-queries#findby) etc methods that you can use when you need to wait for an element to appear.
+Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish befor rendering. React Testing Library exposes [`findByText`](https://testing-library.com/docs/api-queries#findby). You can use this when you need to wait for an element to appear. There are `findBy*` variants for all the `getBy*` methods.
+
+#### Mocks
 
 We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
@@ -242,16 +248,16 @@ If you want to have a go at trying to implement this yourself feel free; if not 
 
 <details>
 <summary>Spoiler</summary>
-<div class="highlight highlight-source-js-jsx">
-<pre>
+
+```javascript
 const mockResponse = `insert your mock html here`;
 global.fetch = jest
   .fn()
   .mockImplementation(() =>
     Promise.resolve({ text: () => Promise.resolve(mockResponse) })
   );
-</pre>
-</div>
+```
+
 </details>
 
 Write some tests that:
