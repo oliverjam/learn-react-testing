@@ -210,7 +210,7 @@ It's worth writing a few tests to cover different potential scenarios the app mi
 #### Hint
 
 ```javascript
-fireEvent.change(inputNode, { event: { target: { value: "my mock value" } } });
+fireEvent.change(inputNode, { target: { value: "my mock value" } });
 ```
 
 ---
