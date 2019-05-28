@@ -1,21 +1,15 @@
-import React from 'react';
+import React from "react";
 
-class Toggle extends React.Component {
-  state = { toggled: false };
-  render() {
-    return (
-      <React.Fragment>
-        <button
-          onClick={() =>
-            this.setState(prevState => ({ toggled: !prevState.toggled }))
-          }
-        >
-          {this.state.toggled ? 'Hide' : 'Show'}
-        </button>
-        {this.state.toggled && <div>{this.props.children}</div>}
-      </React.Fragment>
-    );
-  }
+function Toggle(props) {
+  const [toggled, setToggled] = React.useState(false);
+  return (
+    <React.Fragment>
+      <button onClick={() => setToggled(oldToggled => !oldToggled)}>
+        {toggled ? "Hide" : "Show"}
+      </button>
+      {toggled && <div>{props.children}</div>}
+    </React.Fragment>
+  );
 }
 
 export default Toggle;
