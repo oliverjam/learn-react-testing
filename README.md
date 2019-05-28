@@ -210,7 +210,9 @@ It's worth writing a few tests to cover different potential scenarios the app mi
 
 #### Hint
 
-Take a look at the first entry in [RTL's FAQ](https://testing-library.com/docs/react-testing-library/faq). It should show how to test input change events.
+```javascript
+fireEvent.change(inputNode, { event: { target: { value: "my mock value" } } });
+```
 
 ---
 
