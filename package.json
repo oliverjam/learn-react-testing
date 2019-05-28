@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel workshop/index.html",
-    "test": "jest workshop --watch --noStackTrace",
+    "test": "jest workshop intro --watch --noStackTrace",
     "test:solutions": "jest solution --watch --noStackTrace"
   },
   "repository": {
