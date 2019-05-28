@@ -115,7 +115,7 @@ We'll be using [React Testing Library](https://testing-library.com/docs/react-te
 We can render our components to jsdom using RTL's [`render`](https://testing-library.com/docs/react-testing-library/api#render) method.
 
 ```jsx
-import React from "react-dom";
+import React from "react";
 import { render } from "react-testing-library";
 import Button from "./Button";
 
@@ -129,7 +129,7 @@ test("The button renders", () => {
 The return value of `render` is an object with [useful methods](https://testing-library.com/docs/dom-testing-library/api-queries#queries) for finding elements on the page. You can destructure them out like this:
 
 ```jsx
-import React from "react-dom";
+import React from "react";
 import { render } from "react-testing-library";
 import Button from "./Button";
 
@@ -154,8 +154,8 @@ We're trying to test components that _do stuff_ here, so we need a way to trigge
 Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it.
 
 ```jsx
-import React from "react-dom";
-import { render } from "react-testing-library";
+import React from "react";
+import { render, fireEvent } from "react-testing-library";
 import Button from "./Button";
 
 test("The button renders", () => {
