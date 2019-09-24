@@ -3,8 +3,8 @@ import {
   render,
   fireEvent,
   cleanup,
-  waitForElement
-} from "react-testing-library";
+  waitForElement,
+} from "@testing-library/react";
 import Markdownifier from "../../workshop/markdownifier/markdownifier.js";
 
 // ensures our document gets cleared out after each test

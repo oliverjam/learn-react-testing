@@ -1,5 +1,5 @@
 import React from "react";
-import { render, cleanup, fireEvent } from "react-testing-library";
+import { render, cleanup, fireEvent } from "@testing-library/react";
 import Jadenizer from "../../workshop/jadenizer/jadenizer.js";
 
 // ensures our document gets cleared out after each test
@@ -12,7 +12,7 @@ test("Jadenizer component", () => {
 
   const input = getByLabelText("Enter text for Jadenization");
   fireEvent.change(input, {
-    target: { value: `how can mirrors be real if our eyes aren't real` }
+    target: { value: `how can mirrors be real if our eyes aren't real` },
   }); // fire the onChange event with a value
 
   const button = getByText("Jadenize");

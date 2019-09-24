@@ -1,6 +1,6 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import { render, fireEvent } from "react-testing-library";
+import { render, fireEvent } from "@testing-library/react";
 import Toggle from "../../workshop/toggle/toggle";
 
 test("The toggle toggles when clicked", () => {

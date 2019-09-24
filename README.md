@@ -74,12 +74,12 @@ It's worth noting that `toEqual` performs a recursive check of all properties on
 ```js
 const dip1 = {
   name: "hummus",
-  flavour: "*****"
+  flavour: "*****",
 };
 
 const dip2 = {
   name: "hummus",
-  flavour: "*****"
+  flavour: "*****",
 };
 ```
 
@@ -112,11 +112,11 @@ We'll be using [React Testing Library](https://testing-library.com/docs/react-te
 
 #### Rendering
 
-We can render our components to jsdom using RTL's [`render`](https://testing-library.com/docs/react-testing-library/api#render) method.
+We can render our components to jsdom using RTL's [`render`](https://testing-library.com/docs/@testing-library/react/api#render) method.
 
 ```jsx
 import React from "react";
-import { render } from "react-testing-library";
+import { render } from "@testing-library/react";
 import Button from "./Button";
 
 test("The button renders", () => {
@@ -130,7 +130,7 @@ The return value of `render` is an object with [useful methods](https://testing-
 
 ```jsx
 import React from "react";
-import { render } from "react-testing-library";
+import { render } from "@testing-library/react";
 import Button from "./Button";
 
 test("The button renders", () => {
@@ -155,7 +155,7 @@ Imagine the `Button` component we're testing changes its text from 'click me' to
 
 ```jsx
 import React from "react";
-import { render, fireEvent } from "react-testing-library";
+import { render, fireEvent } from "@testing-library/react";
 import Button from "./Button";
 
 test("The button renders", () => {
