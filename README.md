@@ -184,14 +184,6 @@ const { getByText } = render(<Toggle>text I can search for</Toggle>);
 
 ---
 
-**Note:**
-
-If you read the docs for `render` you'll see that it's recommended to be used with the `cleanup` function. This will ensure you don't end up with lots of copies of your component in the same document.
-
-You can use Jest's handy method that runs after each test to do this: `afterEach(cleanup)`.
-
----
-
 ### Part Four: Testing a real component
 
 Let's get testing a more complex component. Run `npm run dev` and take a look at http://localhost:1234. We're going to write some tests for the Jadenizer component on the left.
