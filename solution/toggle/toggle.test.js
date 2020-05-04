@@ -1,10 +1,10 @@
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Toggle from "../../workshop/toggle/toggle";
 
 test("The toggle toggles when clicked", () => {
-  const { getByText } = render(<Toggle>just clicked</Toggle>);
-  const buttonNode = getByText(/show/i);
+  render(<Toggle>just clicked</Toggle>);
+  const buttonNode = screen.getByText(/show/i);
   fireEvent.click(buttonNode);
-  getByText(/just clicked/i);
+  screen.getByText(/just clicked/i);
 });
