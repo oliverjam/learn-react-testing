@@ -5,13 +5,13 @@ function Jadenizer() {
   const [input, setInput] = React.useState("");
   const [output, setOutput] = React.useState("");
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
     const jadenizedString = jadenCase(input);
     setOutput(jadenizedString);
   };
   return (
-    <section className="section section--jaden" id="jadenizer">
+    <section className="section jaden">
       <form onSubmit={handleSubmit}>
         <h2>Jadenizer</h2>
         <label htmlFor="jadenizer-input">
@@ -20,14 +20,14 @@ function Jadenizer() {
             id="jadenizer-input"
             className="form__input"
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={(e) => setInput(e.target.value)}
           />
         </label>
-        <button type="submit" className="form__button form__button--jaden">
+        <button type="submit" className="form__button">
           Jadenize
         </button>
       </form>
-      {output && <output data-testid="output">{output}</output>}
+      {output && <output>{output}</output>}
     </section>
   );
 }

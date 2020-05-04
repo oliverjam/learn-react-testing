@@ -29,31 +29,23 @@
         padding: var(--padding);
       }
 
-      .🐙 {
-        position: absolute;
-        right: 0;
-        bottom: 0;
-        font-size: 0.875rem;
-      }
-
-      .🐙::after {
-        content: "🦑";
-      }
-
       .section {
         display: grid;
         grid-gap: 2rem;
         align-content: start;
         padding: var(--padding);
         color: white;
+        background-color: var(--primary);
       }
 
-      .section--jaden {
-        background-color: hsl(330, 100%, 45%);
+      .section.jaden {
+        --primary: hsl(330, 100%, 45%);
+        --secondary: blue;
       }
 
-      .section--markdown {
-        background-color: blue;
+      .section.markdown {
+        --primary: blue;
+        --secondary: hsl(330, 100%, 45%);
       }
 
       form {
@@ -67,8 +59,11 @@
 
       label,
       input,
+      textarea,
       button {
         display: block;
+        font: inherit;
+        color: inherit;
       }
 
       button::-moz-focus-inner {
@@ -78,26 +73,15 @@
       .form__input {
         display: block;
         width: 100%;
+        margin-top: 0.5rem;
         padding: 0.5rem;
-        border: none;
-        border-bottom: 2px dashed;
-        font-size: inherit;
+        border: 2px dashed;
         background-color: transparent;
-        color: inherit;
+        resize: vertical;
       }
 
       .form__input:focus {
-        border-bottom: 2px solid;
-      }
-
-      .form__input--markdown {
-        margin-top: 0.5rem;
-        resize: vertical;
-        border: 2px dashed;
-      }
-
-      .form__input--markdown:focus {
-        border: 2px solid;
+        border-style: solid;
       }
 
       .form__button {
@@ -112,19 +96,12 @@
 
       .form__button:hover {
         cursor: pointer;
+        color: var(--secondary);
       }
 
       .form__button:focus {
         outline: 2px dashed;
         outline-offset: -8px;
-      }
-
-      .form__button--jaden:hover {
-        color: blue;
-      }
-
-      .form__button--markdown:hover {
-        color: magenta;
       }
 
       a {

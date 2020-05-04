@@ -16,20 +16,20 @@ function Markdownifier() {
       .then(setOutput);
   };
   return (
-    <section className="section section--markdown" id="markdownifier">
+    <section className="section markdown">
       <form onSubmit={handleSubmit}>
         <h2>Markdownifier</h2>
         <label htmlFor="markdown-input">
           Enter markdown
           <textarea
             id="markdown-input"
-            className="form__input form__input--markdown"
+            className="form__input"
             value={input}
             onChange={(e) => setInput(e.target.value)}
             rows="6"
           />
         </label>
-        <button type="submit" className="form__button form__button--markdown">
+        <button type="submit" className="form__button">
           Markdownify
         </button>
       </form>
