@@ -2,7 +2,7 @@
 
 An introduction to integration testing React components.
 
-### Learning outcomes
+## Learning outcomes
 
 1.  Jest test runner
 1.  React Testing Library
@@ -26,9 +26,7 @@ That's not to say unit tests aren't valuable, but you can usually cover the majo
 
 We want the bulk of our tests to be similar to a real user interacting with our application. Users don't call functions in isolation, they find bits of the UI based on labels and interact with them with their mouse or keyboard.
 
-## Workshop
-
-### Part One: Jest
+## Part One: Jest
 
 Jest is a test runner like Tape. It's got quite a lot more built in, and is used very heavily in React land. The syntax for assertions is pretty similar to other testing libraries, so you don't have to learn much.
 
@@ -49,13 +47,7 @@ We can create a test script in our `package.json`:
 
 The `--watch` starts Jest in watch mode. This will automatically run any tests relating to files that have changed.
 
-#### Test syntax
-
-Clone this repo and run `npm i` to install the dependencies (just Jest and some Babel config so it understands ES6/React).
-
-Run `npm t` to start the test watcher. You should see a few tests passing and one failing. Open up the `intro/intro.test.js` file to find them.
-
-You create a test the same as in Tape: a function called `test` that takes a name string as the first argument and a function as the second.
+You create Jest tests using the `test` function. This is provided as a global variable so you don't need to import it. It takes two arguments: a label string and a callback function containing your test code.
 
 ```js
 test("Jest is working", () => {
@@ -63,29 +55,21 @@ test("Jest is working", () => {
 });
 ```
 
-You can group a set of related tests into a block with `describe`.
-
-Fix the broken test and you should see the test automatically re-run in your terminal (and hopefully pass).
-
-**Note**:
-
-It's worth noting that `toEqual` performs a recursive check of all properties on an object (sometimes called deep equal). `toBe` on the other hand checks object identity. This means these two objects would pass a `toEqual` check, but not a `toBe`:
+Jest has lots of useful assertions for writing tests. Here are a few useful ones:
 
 ```js
-const dip1 = {
-  name: "hummus",
-  flavour: "*****",
-};
-
-const dip2 = {
-  name: "hummus",
-  flavour: "*****",
-};
+expect(x).toBeTruthy();
+expect(x).toBeFalsy();
+expect(x).toEqual(y);
 ```
 
----
+## Workshop setup
 
-#### Your first test
+1. Clone this repo
+1. Run `npm i` to install the dependencies
+1. Run `npm test` to start the test watcher
+
+### Your first test
 
 We'll do a couple of quick unit tests just to make sure your Jest environment is set up correctly and you've got the syntax down.
 
@@ -93,24 +77,22 @@ Have a look at the `workshop/utils/jadenCase.js` helper function. It turns regul
 
 Create a file in `utils/` called `jadenCase.test.js`, then write two tests:
 
-1.  Check that the helper capitalises the first letter of a single word
-1.  Check that it capitalises the first letter of every word in a lowercase sentence
+1. Check that the helper capitalises the first letter of a single word
+1. Check that it capitalises the first letter of every word in a lowercase sentence
 
----
-
-### Part Two: Testing React components
+## Part Two: Testing React components
 
 So how do we test React components? We're going to try and test them as closely to how they'll really be used as possible. That means rendering them in a "DOM" and firing events to test user interaction.
 
-#### jsdom
+### `jsdom`
 
 Jest comes with [jsdom](https://github.com/jsdom/jsdom) set-up. This is a Node implementation of most of the browser APIs needed to interact with the DOM. This means we can treat our Jest environment as if it were a browser.
 
-#### React Testing Library
+### React Testing Library
 
 We'll be using [React Testing Library](https://testing-library.com/docs/react-testing-library/intro) (RTL) to render our React components to jsdom, fire events and find things on the "page".
 
-#### Rendering
+### Rendering
 
 We can render our components to jsdom using RTL's [`render`](https://testing-library.com/docs/@testing-library/react/api#render) method.
 
@@ -124,7 +106,7 @@ test("The button renders", () => {
 });
 ```
 
-#### Finding our elements
+### Finding our elements
 
 The return value of `render` is an object with [useful methods](https://testing-library.com/docs/dom-testing-library/api-queries#queries) for finding elements on the page. You can destructure them out like this:
 
@@ -147,7 +129,7 @@ The object that `render` returns includes lots of useful things, including:
 - `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testid` attributes (for nodes that are hard to find by text).
 - `debug()` will pretty print the DOM tree so you can see what you're working with.
 
-#### Testing interactivity
+### Testing interactivity
 
 We're trying to test components that _do stuff_ here, so we need a way to trigger events. We'll use RTL's [`fireEvent`](https://testing-library.com/docs/api-events#fireevent) export for this.
 
@@ -184,7 +166,7 @@ const { getByText } = render(<Toggle>text I can search for</Toggle>);
 
 ---
 
-### Part Four: Testing a real component
+## Part Four: Testing a real component
 
 Let's get testing a more complex component. Run `npm run dev` and take a look at http://localhost:1234. We're going to write some tests for the Jadenizer component on the left.
 
@@ -199,7 +181,7 @@ Create a file in the same directory called `jadenizer.test.js`. Use React Testin
 
 It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
 
-#### Hint
+### Hint
 
 ```javascript
 fireEvent.change(inputNode, { target: { value: "my mock value" } });
@@ -207,13 +189,13 @@ fireEvent.change(inputNode, { target: { value: "my mock value" } });
 
 ---
 
-### Async tests
+## Async tests
 
 You need to ensure your test doesn't finish before your async code has run. The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
 
 ```js
 test("Async code", () => {
-  return fetch("http://test").then(res => {
+  return fetch("http://test").then((res) => {
     expect(res.ok).toBeTruthy();
   });
 });
@@ -221,13 +203,13 @@ test("Async code", () => {
 
 ---
 
-### Part Five: Mocking network requests
+## Part Five: Mocking network requests
 
 You may have noticed another component on the page. This one takes some text input, then submits it to a [Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
 
 Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish before rendering. React Testing Library exposes [`findByText`](https://testing-library.com/docs/api-queries#findby). You can use this when you need to wait for an element to appear. There are `findBy*` variants for all the `getBy*` methods.
 
-#### Mocks
+### Mocks
 
 We don't need to waste time testing the API. Those tests should live with the source code in that repo. We want to test that our React component does what we expect. So what we want is a way to intercept any network requests made by our component and respond with a mock value, so we can test what our component does once it receives the response.
 
