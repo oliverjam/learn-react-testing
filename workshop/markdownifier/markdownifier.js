@@ -6,14 +6,14 @@ function Markdownifier() {
   const [input, setInput] = React.useState("");
   const [output, setOutput] = React.useState("");
 
-  const handleSubmit = event => {
+  const handleSubmit = (event) => {
     event.preventDefault();
-    const res = fetch("https://micro-marked-nqbbqbtkrq.now.sh/", {
+    fetch("https://micro-marked-nqbbqbtkrq.now.sh/", {
       method: "POST",
-      body: JSON.stringify({ markdown: input })
+      body: JSON.stringify({ markdown: input }),
     })
-      .then(res => res.text())
-      .then(html => setOutput(html));
+      .then((res) => res.text())
+      .then(setOutput);
   };
   return (
     <section className="section section--markdown" id="markdownifier">
@@ -25,7 +25,7 @@ function Markdownifier() {
             id="markdown-input"
             className="form__input form__input--markdown"
             value={input}
-            onChange={e => setInput(e.target.value)}
+            onChange={(e) => setInput(e.target.value)}
             rows="6"
           />
         </label>
@@ -33,12 +33,7 @@ function Markdownifier() {
           Markdownify
         </button>
       </form>
-      {output && (
-        <output
-          data-testid="output"
-          dangerouslySetInnerHTML={{ __html: output }}
-        />
-      )}
+      {output && <output dangerouslySetInnerHTML={{ __html: output }} />}
     </section>
   );
 }

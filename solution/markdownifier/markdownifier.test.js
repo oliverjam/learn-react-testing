@@ -24,7 +24,8 @@ test("Markdownifier component", () => {
   // Jest will wait for a promise if you return it from the test:
   // https://facebook.github.io/jest/docs/en/asynchronous.html#promises
   // Otherwise the test will end immediately and the async bit won't run
-  return screen
-    .findByTestId("output")
-    .then((output) => expect(output.innerHTML).toEqual(mockResponse));
+  return screen.findByText("a heading", { selector: "h1" });
+  // the second argument to query methods is an options object
+  // here we're specifying a selector to check that the element is an h1
+  // this verifies that the html response from the API is rendered correctly
 });
