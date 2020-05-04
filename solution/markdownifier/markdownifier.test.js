@@ -1,11 +1,6 @@
 import React from "react";
-import {
-  render,
-  fireEvent,
-  cleanup,
-  waitForElement,
-} from "@testing-library/react";
-import Markdownifier from "../../workshop/markdownifier/markdownifier.js";
+import { render, fireEvent, cleanup } from "@testing-library/react";
+import Markdownifier from "../../workshop/markdownifier/markdownifier";
 
 // ensures our document gets cleared out after each test
 // so we don't have lots of copies of our component in there
@@ -20,7 +15,7 @@ global.fetch = jest
   );
 
 test("Markdownifier component", () => {
-  const { debug, getByText, getByLabelText, getByTestId } = render(
+  const { debug, getByText, getByLabelText, findByTestId } = render(
     <Markdownifier />
   );
 
@@ -36,10 +31,7 @@ test("Markdownifier component", () => {
   // Jest will wait for a promise if you return it from the test:
   // https://facebook.github.io/jest/docs/en/asynchronous.html#promises
   // Otherwise the test will end immediately and the async bit won't run
-  return waitForElement(() => getByTestId("output")).then(output =>
+  return findByTestId("output").then((output) =>
     expect(output.innerHTML).toEqual(mockResponse)
   );
-  // wait until our element callback finds the output DOM node
-  // then we have access to the node
-  // so we can assert against it to make sure the innerHTML is correct
 });
