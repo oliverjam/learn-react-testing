@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "dev": "parcel workshop/index.html",
-    "test": "jest workshop intro --watch --noStackTrace",
-    "test:solutions": "jest solution --watch --noStackTrace"
+    "test": "jest workshop --watch --noStackTrace",
+    "test:solution": "jest solution --watch --noStackTrace"
   },
   "repository": {
     "type": "git",
@@ -20,16 +20,15 @@
   },
   "homepage": "https://github.com/oliverjam/learn-react-testing#readme",
   "devDependencies": {
-    "@babel/core": "^7.2.2",
-    "@babel/preset-env": "^7.3.1",
-    "@babel/preset-react": "^7.0.0",
-    "@testing-library/react": "^9.1.4",
-    "jest": "^24.8.0",
-    "parcel-bundler": "^1.12.3"
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "@testing-library/react": "^10.0.4",
+    "jest": "^26.0.0",
+    "parcel-bundler": "^1.12.4"
   },
   "dependencies": {
-    "react": "^16.9.0-alpha.0",
-    "react-dom": "^16.9.0-alpha.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
     "whatwg-fetch": "^3.0.0"
   }
 }

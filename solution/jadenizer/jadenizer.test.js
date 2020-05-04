@@ -1,6 +1,6 @@
 import React from "react";
 import { render, cleanup, fireEvent } from "@testing-library/react";
-import Jadenizer from "../../workshop/jadenizer/jadenizer.js";
+import Jadenizer from "../../workshop/jadenizer/jadenizer";
 
 // ensures our document gets cleared out after each test
 // so we don't have lots of copies of our component in there
