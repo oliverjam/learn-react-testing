@@ -108,43 +108,43 @@ test("The button renders", () => {
 
 ### Finding our elements
 
-The return value of `render` is an object with [useful methods](https://testing-library.com/docs/dom-testing-library/api-queries#queries) for finding elements on the page. You can destructure them out like this:
+We need a way to access DOM elements on the page in order to test them. RTL exports a `screen` object containing lots of different query functions that let us search the DOM.
 
 ```jsx
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import Button from "./Button";
 
 test("The button renders", () => {
-  const { getByText } = render(<Button>click me</Button>);
-  const buttonNode = getByText("click me"); // <button>click me</button>;
+  render(<Button>click me</Button>);
+  const buttonNode = screen.getByText("click me");
 });
 ```
 
-We're using `getByText` to search for an element with a certain text content (the same way a user would).
+We're using `screen.getByText` to search for an element with a certain text content (the same way a user would). Another useful method is `screen.getByLabelText`. This finds an input using its label text.
 
-The object that `render` returns includes lots of useful things, including:
+Here's the [full list of queries](https://testing-library.com/docs/dom-testing-library/api-queries). All methods starting with `getBy` will automatically fail your test if they can't find a matching element. That means you don't necessarily need any assertions.
 
-- `container` is the div your component was rendered into.
-- `getByText`, `getByLabelText` and `getByTestId`. The first will find nodes by text content, the second by label content (for inputs), and the third by `data-testid` attributes (for nodes that are hard to find by text).
-- `debug()` will pretty print the DOM tree so you can see what you're working with.
+### Debugging the DOM
+
+One more useful method is `screen.debug`. Calling it will pretty print the entire DOM to your terminal. You can also pass this a single element for a smaller log. This is helpful for checking the DOM you're actually rendering (since you can't see it in a real browser).
 
 ### Testing interactivity
 
 We're trying to test components that _do stuff_ here, so we need a way to trigger events. We'll use RTL's [`fireEvent`](https://testing-library.com/docs/api-events#fireevent) export for this.
 
-Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it.
+Imagine the `Button` component we're testing changes its text from 'click me' to 'just clicked' when you click it. We need to find the button, fire a click event, then search for the updated button text to verify the DOM was correctly changed.
 
 ```jsx
 import React from "react";
-import { render, fireEvent } from "@testing-library/react";
+import { render, screen, fireEvent } from "@testing-library/react";
 import Button from "./Button";
 
 test("The button renders", () => {
-  const { getByText } = render(<Button>click me</Button>);
-  const buttonNode = getByText("click me"); // <button>click me</button>;
+  render(<Button>click me</Button>);
+  const buttonNode = screen.getByText("click me"); // <button>click me</button>;
   fireEvent.click(buttonNode);
-  getByText("just clicked"); // the same button node with updated text
+  screen.getByText("just clicked"); // the same button node with updated text
   // getByText will fail the test if it can't find an element with matching text
 });
 ```
@@ -159,7 +159,10 @@ Create a file called `toggle.test.js` and write a test that renders the `Toggle`
 <summary>Click for a hint</summary>
 
 ```jsx
-const { getByText } = render(<Toggle>text I can search for</Toggle>);
+render(<Toggle>some text that will appear</Toggle>);
+// get the button
+// click on the button
+// verify that "some text that will appear" is on the page
 ```
 
 </details>
@@ -170,16 +173,14 @@ const { getByText } = render(<Toggle>text I can search for</Toggle>);
 
 Let's get testing a more complex component. Run `npm run dev` and take a look at http://localhost:1234. We're going to write some tests for the Jadenizer component on the left.
 
-Have a look at `workshop/jadenizer/jadenizer`. This component renders a form containing an input. When submitted it converts the input string to Jaden Case and renders it under the form.
+Have a look at `workshop/jadenizer/jadenizer.js`. This component renders a form containing an input. When submitted it converts the input string to Jaden Case and renders it under the form.
 
 Create a file in the same directory called `jadenizer.test.js`. Use React Testing Library to:
 
 1.  render the Jadenizer component
-1.  input a string
-1.  submit the form
-1.  assert that the string is correctly converted to Jaden Case and rendered
-
-It's worth writing a few tests to cover different potential scenarios the app might encounter with real use. What happens if a user submits an empty form?
+1.  use `fireEvent` to type something into the input
+1.  use `fireEvent` to submit the form
+1.  assert that a JadenCased version of the string you entered is rendered
 
 ### Hint
 
@@ -187,11 +188,11 @@ It's worth writing a few tests to cover different potential scenarios the app mi
 fireEvent.change(inputNode, { target: { value: "my mock value" } });
 ```
 
----
-
 ## Async tests
 
-You need to ensure your test doesn't finish before your async code has run. The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
+When testing asynchronous code we need to ensure our test doesn't finish before our code has run. Otherwise the test will immediately pass before any of our promises etc resolve.
+
+The simplest way to do this is to return a promise. Jest will spot this and wait for the promise to resolve before finishing the test:
 
 ```js
 test("Async code", () => {
@@ -207,7 +208,11 @@ test("Async code", () => {
 
 You may have noticed another component on the page. This one takes some text input, then submits it to a [Node server](https://github.com/oliverjam/micro-marked) that converts Markdown to HTML. It then renders the HTML to the page.
 
-Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish before rendering. React Testing Library exposes [`findByText`](https://testing-library.com/docs/api-queries#findby). You can use this when you need to wait for an element to appear. There are `findBy*` variants for all the `getBy*` methods.
+Testing this component is going to be a little trickier because of that network request. First we need to consider that our DOM is going to get updated asynchronously because React will wait for the API call to finish before updating the page.
+
+### Searching for elements that aren't there yet
+
+React Testing Library has asynchronous variants of all the `getBy` methods—they start with `findBy` instead. For example [`findByText`](https://testing-library.com/docs/api-queries#findby) will search for an element by its text content, but return a promise. The promise either resolves when that element eventually appears, or rejects if it doesn't appear after 5 seconds.
 
 ### Mocks
 
@@ -237,31 +242,9 @@ global.fetch = jest
 
 Write some tests that:
 
-1.  set up a fetch mock that responds with what you expect
-1.  render the Markdownifier component
-1.  input some markdown
-1.  submit the form
-1.  assert that Markdownifier submitted the right request to the API
-1.  assert that Markdownifier rendered the mocked HTML response
-
-## Caveats (for completeness)
-
-We deliberately haven't covered a couple of things that you'll encounter a lot in the React world. Here's our justification for why 🙃
-
-### Enzyme
-
-Enzyme is a very popular React testing library from Airbnb. It has some of the same functionality as React Testing Library, but can do _a lot_ more stuff, and has a correspondingly bigger API. It can be a bit overwhelming at first, and makes it easy to write bad tests since you can pretty much do anything with it.
-
-For example you can "shallow render" a component (i.e. not to a real DOM), and then test your component methods directly (e.g. by calling `handleClick` instead of actually simulating a click on a button). This can encourage you to test implementation details of the component, rather than the user-facing "API"—the rendered UI.
-
-That's not to say you can't write good tests with Enzyme, just that when you're learning it's easier to have a more limited API that guides you in the right direction.
-
-### Snapshot testing
-
-Jest has a feature called "snapshots". This is a way to automatically take a copy of your test output (the first time it runs), then assert that this output hasn't change for all subsequent test runs. (Jest keeps these in a `__snapshots__` directory next to the test file). This can sometimes get overused as it's very easy to simply render a component, create a snapshot and end up with a test that fails whenever the rendered output changes.
-
-They're also reliant on your code outputting the correct result the first time the test runs, otherwise you're asserting against an already wrong snapshot.
-
-Over the last 9 months we've become less and less enamoured with snapshot testing components at Ticketmaster. They end up effectively serving the same purpose as reviewing a diff in a PR. You change the render method of a component, see the snapshot fail (duh, you just changed it), then have to update it.
-
-Snapshots are useful for testing generated output and making sure it doesn't change when you refactor. For example we use them for testing date/currency formatting where it would be a hassle to maintain a list of all the correctly formatted strings.
+1. Set up a fetch mock that responds with what you expect
+1. Render the Markdownifier component
+1. Input some markdown
+1. Submit the form
+1. Ensure that Markdownifier submitted the right request to the API
+1. Ensure that Markdownifier rendered the mocked HTML response
