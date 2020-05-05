@@ -3,6 +3,13 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import Markdownifier from "../../workshop/markdownifier/markdownifier";
 
 const mockResponse = `<h1 id="a-heading">a heading</h1>`;
+
+// fetch is a function that returns a promise
+// The promise resolves with an object containing a `text` property
+// `text` is also a function that returns a promise
+// This promise resolves with the text response
+// e.g. it is be used like this inside the component:
+// fetch("blah").then(res => res.text()).then(html => console.log(html))
 global.fetch = jest
   .fn()
   .mockImplementation(() =>
@@ -16,7 +23,7 @@ test("Markdownifier component", () => {
   fireEvent.change(input, { target: { value: "# a heading" } }); // fire a change event with the right value
 
   const button = screen.getByText("Markdownify");
-  fireEvent.click(button); // fire a real browser event on the submit button
+  fireEvent.click(button);
 
   // check that our mock fetch has been called
   expect(global.fetch).toHaveBeenCalledTimes(1);
