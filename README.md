@@ -69,6 +69,8 @@ expect(x).toEqual(y);
 1. Run `npm i` to install the dependencies
 1. Run `npm test` to start the test watcher
 
+If you're on Linux you may encounter an error about "too many watchers". To fix this you can either remove the `--watch` from the test script in the `package.json`, or [try this proper solution](https://stackoverflow.com/a/55543310).
+
 ### Your first test
 
 We'll do a couple of quick unit tests just to make sure your Jest environment is set up correctly and you've got the syntax down.
