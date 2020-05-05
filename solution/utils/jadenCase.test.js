@@ -1,4 +1,4 @@
-import jadenCase from "../../workshop/utils/jadenCasenCase";
+import jadenCase from "../../workshop/utils/jadenCase";
 
 describe("jadenCase helper", () => {
   test("Properly jaden-cases a lowercase word", () => {
