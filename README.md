@@ -55,7 +55,7 @@ test("Jest is working", () => {
 });
 ```
 
-Jest has lots of useful assertions for writing tests. Here are a few useful ones:
+Jest has [lots of useful assertions](https://jestjs.io/docs/en/expect.html) for writing tests. Here are a few useful ones:
 
 ```js
 expect(x).toBeTruthy();
