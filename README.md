@@ -12,7 +12,7 @@ An introduction to integration testing React components.
 
 ### What's an integration test?
 
-Where a unit test checks that a single "unit" of your code (usually a function) works as expected in isolation, an integration test ensures a more complete "feature" is working. This usually means testing a few tightly couples pieces of your code in one go.
+Where a unit test checks that a single "unit" of your code (usually a function) works as expected in isolation, an integration test ensures a more complete "feature" is working. This usually means testing a few tightly coupled pieces of your code in one go.
 
 For example you might render a component, check the rendered DOM for a button, click on that button, then finally check that the DOM has updated as you expected.
 
